@@ -6,6 +6,7 @@
    * [`jenkins-jobs/`](https://github.com/fabric8-services/fabric8-auth-tests/tree/master/performance/jenkins-jobs) - [Jenkins Job Builder](https://docs.openstack.org/infra/jenkins-job-builder/) descriptors for the Jenkins jobs.
    * [`openstack/osioperf-lab/`](https://github.com/fabric8-services/fabric8-auth-tests/tree/master/performance/openstack/osioperf-lab) - Resources for OsioPerf LAB
    * [`scripts/`](https://github.com/fabric8-services/fabric8-auth-tests/tree/master/performance/scripts) - Sources and automation scripts for the performance scenarios.
+ * [Openshift.io Planner](https://openshift.io/openshiftio/openshiftio/plan/board?label=Perf_test) - Task/issue tracking related to the performance testing itself (Chosen over GitHub issue tracker for [dogfooding](https://en.wikipedia.org/wiki/Eating_your_own_dog_food) reasons).
  * [Jenkins](https://osioperf-jenkins.rhev-ci-vms.eng.rdu2.redhat.com) - Used to run the automated jobs to execute the performance scenarios.
  * [OsioPerf LAB](https://ci-rhos.centralci.eng.rdu2.redhat.com/) - An OpenStack cluster (`OpenShift.io-Performance-Testing` project) for the clients that will simulate concurrent users accessing the tested system.
    * 2 server nodes (4 CPU, 8GB RAM)
