@@ -2,7 +2,7 @@
 
 ## Resources:
 
- * [GitHub repository `fabric8-services/fabric8-auth-tests`](https://github.com/fabric8-services/fabric8-auth-tests) - Under `perf_tests/osioperf` directory
+ * [GitHub repository `fabric8-services/fabric8-auth-tests`](https://github.com/fabric8-services/fabric8-auth-tests) - Under `performance` directory
    * [`jenkins-jobs/`](https://github.com/fabric8-services/fabric8-auth-tests/tree/master/performance/jenkins-jobs) - [Jenkins Job Builder](https://docs.openstack.org/infra/jenkins-job-builder/) descriptors for the Jenkins jobs.
    * [`openstack/osioperf-lab/`](https://github.com/fabric8-services/fabric8-auth-tests/tree/master/performance/openstack/osioperf-lab) - Resources for OsioPerf LAB
    * [`scripts/`](https://github.com/fabric8-services/fabric8-auth-tests/tree/master/performance/scripts) - Sources and automation scripts for the performance scenarios.
