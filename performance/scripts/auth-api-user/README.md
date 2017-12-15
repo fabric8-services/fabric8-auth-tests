@@ -7,5 +7,5 @@
  * each simulated user waits randomly between 1 to 10 seconds before sening the next request
    
 ## Test scenarios
-The scenarios are described [here](https://github.com/fabric8-services/fabric8-auth/issues/209):
+The scenarios are described [here](https://github.com/fabric8-services/fabric8-auth/issues/209).
 
