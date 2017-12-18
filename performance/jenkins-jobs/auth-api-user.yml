@@ -5,6 +5,8 @@
     properties:
        - ownership:
            owner: pmacik
+       - build-discarder:
+           days-to-keep: 28
     parameters:
        - choice:
            name: SERVER_SCHEME
@@ -84,7 +86,7 @@
             branches:
                 - '*/master'
     triggers:
-        - timed: H 0,12 * * *
+        - timed: H/30 * * * *
     wrappers:
         - workspace-cleanup:
             dirmatch: false
