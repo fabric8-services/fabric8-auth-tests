@@ -21,9 +21,29 @@ mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_
 LOGIN_USERS_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-login-users.log
 cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_LOG
 
-echo "#!/bin/bash
-export USER_TOKENS=\"$(cat $TOKENS_FILE)\"
-" > $ENV_FILE
+	echo "#!/bin/bash
+export USER_TOKENS=\"0;0\"
+" > $ENV_FILE-master;
+
+TOKEN_COUNT=`cat $TOKENS_FILE | wc -l`
+i=1
+s=1
+rm -rf $TOKENS_FILE-slave-*;
+while [ $i -le $TOKEN_COUNT ]; do
+	sed "${i}q;d" $TOKENS_FILE >> $TOKENS_FILE-slave-$s;
+	i=$((i+1));
+	if [ $s -lt $SLAVES ]; then
+		s=$((s+1));
+	else
+		s=1;
+	fi;
+done
+
+for s in $(seq 1 $SLAVES); do
+	echo "#!/bin/bash
+export USER_TOKENS=\"$(cat $TOKENS_FILE-slave-$s)\"
+" > $ENV_FILE-slave-$s;
+done
 
 echo " Prepare locustfile template"
 ./_prepare-locustfile.sh auth-api-user.py

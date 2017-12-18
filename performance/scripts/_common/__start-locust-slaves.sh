@@ -10,7 +10,7 @@ if [ -f $LOCUST_FILE ] ; then
 		echo "Starting a client at $SLAVE_HOST ($i/$SLAVES) ...";
 		scp $LOCUST_FILE $SSH_USER@$SLAVE_HOST:$SSH_WORKDIR/$JOB_BASE_NAME-$BUILD_NUMBER-locustfile.py;
 		ssh $SSH_USER@$SLAVE_HOST "chmod u+w $SSH_WORKDIR/users.env"
-		scp $ENV_FILE $SSH_USER@$SLAVE_HOST:$SSH_WORKDIR/users.env
+		scp $ENV_FILE-slave-$i $SSH_USER@$SLAVE_HOST:$SSH_WORKDIR/users.env
 		CMD="nohup locust -f $JOB_BASE_NAME-$BUILD_NUMBER-locustfile.py --loglevel=WARNING --slave --master-host=$MASTER_HOST 2>$JOB_BASE_NAME-$BUILD_NUMBER-locust-slave-$i.log > $JOB_BASE_NAME-$BUILD_NUMBER-locust-slave-$i.log &";
 		echo "Running $CMD";
 		echo $CMD > $$-slave-$i;
