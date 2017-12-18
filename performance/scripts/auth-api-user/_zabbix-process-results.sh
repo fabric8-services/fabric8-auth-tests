@@ -14,7 +14,7 @@ TIMESTAMP=`date +%s`
 ZABBIX_LOG_FILE=`echo $1 | sed -e 's,-report_requests\.csv,,g'`-zabbix.log
 
 VALUES=(`cat $INPUT | grep -F "$ENDPOINT" | cut -d ',' -f 3-10 | tr ',' ' '`)
-VAL_REQ=${VALUES[0]}
+VAL_REQ=$((${VALUES[0]} + ${VALUES[1]}))
 VAL_FAIL=${VALUES[1]}
 VAL_FAIL_RATE=`echo "100*$VAL_FAIL/$VAL_REQ" | bc -l`
 VAL_MED=${VALUES[2]}
