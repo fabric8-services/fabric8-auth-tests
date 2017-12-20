@@ -28,5 +28,6 @@ echo "root      soft    nofile      999999" >> /etc/security/limits.conf
 
 pip install --upgrade pip
 pip install locustio
+pip install grip
 
 
