@@ -138,7 +138,8 @@ filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_min" "@@API_USER_BY_NAME_MIN@
 filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_median" "@@API_USER_BY_NAME_MEDIAN@@" $REPORT_FILE;
 filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_max" "@@API_USER_BY_NAME_MAX@@" $REPORT_FILE;
 
-sed -i -e 's,@@TIMESTAMP@@,'`date "+%Y-%m-%d %H:%M:%S (%Z)"`',g' $REPORT_FILE
+REPORT_TIMESTAMP=`date '+%Y-%m-%d %H:%M:%S (%Z)'`
+sed -i -e "s,@@TIMESTAMP@@,$REPORT_TIMESTAMP,g" $REPORT_FILE
 
 grip --export $REPORT_FILE
 
