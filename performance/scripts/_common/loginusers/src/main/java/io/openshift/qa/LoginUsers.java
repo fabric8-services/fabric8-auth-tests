@@ -17,7 +17,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -35,10 +37,30 @@ public class LoginUsers {
       System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS.%1$tL %4$-7s [%3$s] %5$s %6$s%n");
    }
 
-   public static void main(String[] args) throws Exception {
-      final LinkedList<Long> openLoginPageTimes = new LinkedList<>();
-      final LinkedList<Long> loginTimes = new LinkedList<>();
+   private enum Metric {
+      OpenLoginPage("open-login-page"),
+      Login("login");
 
+      private final String logName;
+
+      Metric(final String logName) {
+         this.logName = logName;
+      }
+
+      String logName() {
+         return this.logName;
+      }
+   }
+
+   private static long start = -1;
+
+   private static final long TIMEOUT = 60;
+
+   public static void main(String[] args) throws Exception {
+      HashMap<Metric, LinkedList<Long>> metricMap = new HashMap<>();
+      for (Metric m : Metric.values()) {
+         metricMap.put(m, new LinkedList<>());
+      }
       final StringBuffer tokens = new StringBuffer();
 
       Properties usersProperties = new Properties();
@@ -46,32 +68,28 @@ public class LoginUsers {
       usersProperties.load(new InputStreamReader(LoginUsers.class.getResourceAsStream("/users.properties")));
       for (Map.Entry<Object, Object> user : usersProperties.entrySet()) {
          final String uName = user.getKey().toString();
-         final String uPasswd = user.getValue().toString();
-
+         final String uPassword = user.getValue().toString();
          final ChromeOptions op = new ChromeOptions();
-         op.addArguments("headless");
+         final List<String> arguments = new LinkedList<>();
+         arguments.add("headless");
+         arguments.add("--window-size=1280,960");
+         op.addArguments(arguments);
          final WebDriver driver = new ChromeDriver(op);
-
          final String startUrl = System.getProperty("auth.server.address") + ":" + System.getProperty("auth.server.port") + "/api/login?redirect=http%3A%2F%2Flocalhost%3A8090%2Flink.html";
-         log.log(Level.FINE, startUrl);
          log.log(Level.FINE, "Logging user " + uName + " in...");
-
+         _start();
          driver.get(startUrl);
-         long start = System.currentTimeMillis();
-
-         new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(By.id("kc-login")));
-         final long openLoginPageTime = System.currentTimeMillis() - start;
-         openLoginPageTimes.add(openLoginPageTime);
-         log.info(uName + "-open-login-page:" + openLoginPageTime + "ms");
+         new WebDriverWait(driver, TIMEOUT).until(ExpectedConditions.elementToBeClickable(By.id("kc-login")));
+         final long openLoginPage = _stop();
+         log.info(uName + "-" + Metric.OpenLoginPage.logName() + ":" + openLoginPage + "ms");
          driver.findElement(By.id("username")).sendKeys(uName);
-         WebElement pass = driver.findElement(By.id("password"));
-         pass.sendKeys(uPasswd);
-         start = System.currentTimeMillis();
+         final WebElement pass = driver.findElement(By.id("password"));
+         pass.sendKeys(uPassword);
+         _start();
          pass.submit();
-         (new WebDriverWait(driver, 10)).until(ExpectedConditions.urlContains("access_token"));
-         final long loginTime = System.currentTimeMillis() - start;
-         loginTimes.add(loginTime);
-         log.info(uName + "-login:" + loginTime + "ms");
+         (new WebDriverWait(driver, TIMEOUT)).until(ExpectedConditions.urlContains("access_token"));
+         final long login = _stop();
+         log.info(uName + "-" + Metric.Login.logName() + ":" + login + "ms");
          String tokenJson = null;
          String[] queryParams = new String[0];
          try {
@@ -89,25 +107,37 @@ public class LoginUsers {
                tokenJson = p.split("=")[1];
             }
          }
-         JSONObject json = new JSONObject(tokenJson);
+         final JSONObject json = new JSONObject(tokenJson);
          synchronized (tokens) {
             tokens.append(json.getString("access_token"))
                   .append(";")
                   .append(json.getString("refresh_token"))
                   .append("\n");
          }
+         metricMap.get(Metric.OpenLoginPage).add(openLoginPage);
+         metricMap.get(Metric.Login).add(login);
       }
-      Collections.sort(openLoginPageTimes);
-      final int olpt = openLoginPageTimes.size();
-      Collections.sort(loginTimes);
-      final int lt = loginTimes.size();
 
-      log.info("All users done.\n");
-      log.info("open-login-page-time-stats:count=" + olpt + ";min=" + openLoginPageTimes.getFirst() + ";med=" + openLoginPageTimes.get(olpt / 2) + ";max=" + openLoginPageTimes.getLast());
-      log.info("login-time-stats:count=" + lt + ";min=" + loginTimes.getFirst() + ";med=" + loginTimes.get(olpt / 2) + ";max=" + loginTimes.getLast() + "\n");
+      log.info("All users done.");
+      for (Metric metric : Metric.values()) {
+         final LinkedList<Long> list = metricMap.get(metric);
+         Collections.sort(list);
+         final int size = list.size();
+         log.info(metric.logName() + "-time-stats:count=" + size + ";min=" + list.getFirst() + ";med=" + list.get(size / 2) + ";max=" + list.getLast());
+      }
       final FileWriter fw = new FileWriter(new File(System.getProperty("user.tokens.file", "user.tokens")), false);
       fw.append(tokens.toString());
       fw.close();
       System.exit(0);
+      System.exit(0);
    }
+
+   private static void _start() {
+      start = System.currentTimeMillis();
+   }
+
+   private static long _stop() {
+      return System.currentTimeMillis() - start;
+   }
+
 }
