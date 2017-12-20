@@ -13,5 +13,6 @@ set yrange [0:*]
 set datafile separator ";"
 set xlabel "Time [s]"
 set ylabel "# of Failures"
+set grid
 plot "$1" u 1:3 t "# of failures"
 eor

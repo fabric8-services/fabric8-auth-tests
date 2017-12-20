@@ -22,6 +22,7 @@ set xtic rotate by -45 scale 0
 set xlabel "Percentile [%]"
 set ylabel "Response Time [ms]"
 set yrange [0:*]
+set grid
 plot "$$-rt-histo.csv" using 2:xtic(1) with boxes t "", "" using 0:(\$2+25):(sprintf("%3.0f",\$2)) with labels t ""
 eor
 

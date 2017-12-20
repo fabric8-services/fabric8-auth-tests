@@ -13,6 +13,7 @@ set yrange [0:*]
 set datafile separator ";"
 set xlabel "Time [s]"
 set ylabel "ms"
+set grid
 plot "$1" u 1:4 t "Average", "$1" u 1:5 t "Min", "$1" u 1:6 t "Max", "$1" u 1:7 t "Median"
 eor
 
@@ -25,6 +26,7 @@ set yrange [0:*]
 set datafile separator ";"
 set xlabel "Time [s]"
 set ylabel "ms"
+set grid
 plot "$1" u 1:5 t "Min"
 eor
 
