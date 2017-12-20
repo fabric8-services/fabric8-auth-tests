@@ -103,6 +103,6 @@
     disabled: false
     publishers:
        - archive:
-           artifacts: '**/*.log,**/*.png,**/*.csv'
+           artifacts: '**/*.log,**/*.png,**/*.csv,**/*.html'
            allow-empty: 'true'
            fingerprint: true
