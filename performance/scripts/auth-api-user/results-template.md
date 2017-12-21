@@ -1,6 +1,11 @@
 # Results (@@JOB_BASE_NAME@@ #@@BUILD_NUMBER@@ @@TIMESTAMP@@)
 ## Summary
 The following tables show the final results taken and computed from a single test run - i.e. after and by running the login phase and the 5 minutes of the load phase.
+
+The summary results of each run are uploaded to the
+[Zabbix](https://zabbix.devshift.net:9443/zabbix/charts.php?fullscreen=1&graphid=8575)
+monitoring system to track the results' history.
+
 ### Prepare Test
 | Scenario | Minimal | Median | Maximal |
 | :--- | ---: | ---: | ---: |
