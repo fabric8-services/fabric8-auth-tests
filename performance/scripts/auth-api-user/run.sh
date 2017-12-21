@@ -121,22 +121,27 @@ filterZabbixValue $ZABBIX_LOG "login-time.max" "@@LOGIN_TIME_MAX@@" $RESULTS_FIL
 filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_min" "@@AUTH_API_USER_MIN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_median" "@@AUTH_API_USER_MEDIAN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_max" "@@AUTH_API_USER_MAX@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_average" "@@AUTH_API_USER_AVERAGE@@" $RESULTS_FILE;
 
 filterZabbixValue $ZABBIX_LOG "auth-api-user-github-token-rt_min" "@@AUTH_API_USER_GITHUB_TOKEN_MIN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "auth-api-user-github-token-rt_median" "@@AUTH_API_USER_GITHUB_TOKEN_MEDIAN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "auth-api-user-github-token-rt_max" "@@AUTH_API_USER_GITHUB_TOKEN_MAX@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-user-github-token-rt_average" "@@AUTH_API_USER_GITHUB_TOKEN_AVERAGE@@" $RESULTS_FILE;
 
 filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_min" "@@AUTH_API_TOKEN_REFRESH_MIN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_median" "@@AUTH_API_TOKEN_REFRESH_MEDIAN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_max" "@@AUTH_API_TOKEN_REFRESH_MAX@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_average" "@@AUTH_API_TOKEN_REFRESH_AVERAGE@@" $RESULTS_FILE;
 
 filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_min" "@@API_USER_BY_ID_MIN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_median" "@@API_USER_BY_ID_MEDIAN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_max" "@@API_USER_BY_ID_MAX@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_average" "@@API_USER_BY_ID_AVERAGE@@" $RESULTS_FILE;
 
 filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_min" "@@API_USER_BY_NAME_MIN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_median" "@@API_USER_BY_NAME_MEDIAN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_max" "@@API_USER_BY_NAME_MAX@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_average" "@@API_USER_BY_NAME_AVERAGE@@" $RESULTS_FILE;
 
 REPORT_TIMESTAMP=`date '+%Y-%m-%d %H:%M:%S (%Z)'`
 sed -i -e "s,@@TIMESTAMP@@,$REPORT_TIMESTAMP,g" $RESULTS_FILE

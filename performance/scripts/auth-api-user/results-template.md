@@ -13,13 +13,13 @@ monitoring system to track the results' history.
 | `login-time` | @@LOGIN_TIME_MIN@@ ms | @@LOGIN_TIME_MEDIAN@@ ms | @@LOGIN_TIME_MAX@@ ms |
 
 ### Load Test
-| Scenario | Minimal | Median | Maximal |
-| :--- | ---: | ---: | ---: |
-|`auth-api-user`| @@AUTH_API_USER_MIN@@ ms | @@AUTH_API_USER_MEDIAN@@ ms | @@AUTH_API_USER_MAX@@ ms |
-|`auth-api-token-refresh`| @@AUTH_API_TOKEN_REFRESH_MIN@@ ms | @@AUTH_API_TOKEN_REFRESH_MEDIAN@@ ms | @@AUTH_API_TOKEN_REFRESH_MAX@@ ms |
-|`auth-api-user-github-token`| @@AUTH_API_USER_GITHUB_TOKEN_MIN@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_MEDIAN@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_MAX@@ ms |
-|`api-user-by-id`| @@API_USER_BY_ID_MIN@@ ms | @@API_USER_BY_ID_MEDIAN@@ ms | @@API_USER_BY_ID_MAX@@ ms |
-|`api-user-by-name`| @@API_USER_BY_NAME_MIN@@ ms | @@API_USER_BY_NAME_MEDIAN@@ ms | @@API_USER_BY_NAME_MAX@@ ms |
+| Scenario | Minimal | Median | Maximal | Average |
+| :--- | ---: | ---: | ---: | ---: |
+|`auth-api-user`| @@AUTH_API_USER_MIN@@ ms | @@AUTH_API_USER_MEDIAN@@ ms | @@AUTH_API_USER_MAX@@ ms | @@AUTH_API_USER_AVERAGE@@ ms |
+|`auth-api-token-refresh`| @@AUTH_API_TOKEN_REFRESH_MIN@@ ms | @@AUTH_API_TOKEN_REFRESH_MEDIAN@@ ms | @@AUTH_API_TOKEN_REFRESH_MAX@@ ms | @@AUTH_API_TOKEN_REFRESH_AVERAGE@@ ms |
+|`auth-api-user-github-token`| @@AUTH_API_USER_GITHUB_TOKEN_MIN@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_MEDIAN@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_MAX@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_AVERAGE@@ ms |
+|`api-user-by-id`| @@API_USER_BY_ID_MIN@@ ms | @@API_USER_BY_ID_MEDIAN@@ ms | @@API_USER_BY_ID_MAX@@ ms | @@API_USER_BY_ID_AVERAGE@@ ms |
+|`api-user-by-name`| @@API_USER_BY_NAME_MIN@@ ms | @@API_USER_BY_NAME_MEDIAN@@ ms | @@API_USER_BY_NAME_MAX@@ ms | @@API_USER_BY_NAME_AVERAGE@@ ms |
 
 ## Test charts
 The charts bellow show the whole duration of all the phases for each scenario - i.e. what lead to the final results shown above in the summary.
