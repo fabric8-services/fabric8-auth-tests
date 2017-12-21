@@ -13,13 +13,13 @@ monitoring system to track the results' history.
 | `login-time` | @@LOGIN_TIME_MIN@@ ms | @@LOGIN_TIME_MEDIAN@@ ms | @@LOGIN_TIME_MAX@@ ms |
 
 ### Load Test
-| Scenario | Minimal | Median | Maximal | Average |
-| :--- | ---: | ---: | ---: | ---: |
-|`auth-api-user`| @@AUTH_API_USER_MIN@@ ms | @@AUTH_API_USER_MEDIAN@@ ms | @@AUTH_API_USER_MAX@@ ms | @@AUTH_API_USER_AVERAGE@@ ms |
-|`auth-api-token-refresh`| @@AUTH_API_TOKEN_REFRESH_MIN@@ ms | @@AUTH_API_TOKEN_REFRESH_MEDIAN@@ ms | @@AUTH_API_TOKEN_REFRESH_MAX@@ ms | @@AUTH_API_TOKEN_REFRESH_AVERAGE@@ ms |
-|`auth-api-user-github-token`| @@AUTH_API_USER_GITHUB_TOKEN_MIN@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_MEDIAN@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_MAX@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_AVERAGE@@ ms |
-|`api-user-by-id`| @@API_USER_BY_ID_MIN@@ ms | @@API_USER_BY_ID_MEDIAN@@ ms | @@API_USER_BY_ID_MAX@@ ms | @@API_USER_BY_ID_AVERAGE@@ ms |
-|`api-user-by-name`| @@API_USER_BY_NAME_MIN@@ ms | @@API_USER_BY_NAME_MEDIAN@@ ms | @@API_USER_BY_NAME_MAX@@ ms | @@API_USER_BY_NAME_AVERAGE@@ ms |
+| Scenario | Minimal | Median | Maximal | Average | Failed |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+|`auth-api-user`| @@AUTH_API_USER_MIN@@ ms | @@AUTH_API_USER_MEDIAN@@ ms | @@AUTH_API_USER_MAX@@ ms | @@AUTH_API_USER_AVERAGE@@ ms | @@AUTH_API_USER_FAILED@@ |
+|`auth-api-token-refresh`| @@AUTH_API_TOKEN_REFRESH_MIN@@ ms | @@AUTH_API_TOKEN_REFRESH_MEDIAN@@ ms | @@AUTH_API_TOKEN_REFRESH_MAX@@ ms | @@AUTH_API_TOKEN_REFRESH_AVERAGE@@ ms | @@AUTH_API_TOKEN_REFRESH_FAILED@@ |
+|`auth-api-user-github-token`| @@AUTH_API_USER_GITHUB_TOKEN_MIN@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_MEDIAN@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_MAX@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_AVERAGE@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_FAILED@@ |
+|`api-user-by-id`| @@API_USER_BY_ID_MIN@@ ms | @@API_USER_BY_ID_MEDIAN@@ ms | @@API_USER_BY_ID_MAX@@ ms | @@API_USER_BY_ID_AVERAGE@@ ms | @@API_USER_BY_ID_FAILED@@ |
+|`api-user-by-name`| @@API_USER_BY_NAME_MIN@@ ms | @@API_USER_BY_NAME_MEDIAN@@ ms | @@API_USER_BY_NAME_MAX@@ ms | @@API_USER_BY_NAME_AVERAGE@@ ms | @@API_USER_BY_NAME_FAILED@@ |
 
 ## Test charts
 The charts bellow show the whole duration of all the phases for each scenario - i.e. what lead to the final results shown above in the summary.
@@ -45,27 +45,37 @@ That is the reason for the values of the maximals always go up.
 ![auth-api-user-median-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-median-response-time.png)
 ![auth-api-user-maximal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-maximal-response-time.png)
 ![auth-api-user-average-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-average-response-time.png)
+#### `auth-api-user` Failures
+![auth-api-user-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-failures.png)
 #### `auth-api-token-refresh` Response Time
 ![auth-api-token-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-response-time.png)
 ![auth-api-token-minimal-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-minimal-response-time.png)
 ![auth-api-token-median-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-median-response-time.png)
 ![auth-api-token-maximal-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-maximal-response-time.png)
 ![auth-api-token-average-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-average-response-time.png)
+#### `auth-api-token-refresh` Failures
+![auth-api-token-refresh-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-failures.png)
 #### `auth-api-user-github-token` Response Time
 ![auth-api-user-github-token-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-response-time.png)
 ![auth-api-user-github-token-minimal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-minimal-response-time.png)
 ![auth-api-user-github-token-median-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-median-response-time.png)
 ![auth-api-user-github-token-maximal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-maximal-response-time.png)
 ![auth-api-user-github-token-average-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-average-response-time.png)
+#### `auth-api-user-github-token` Failures
+![auth-api-user-github-token-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-failures.png)
 #### `api-user-by-id` Response Time
 ![api-user-by-id-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-response-time.png)
 ![api-user-by-id-minimal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-minimal-response-time.png)
 ![api-user-by-id-median-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-median-response-time.png)
 ![api-user-by-id-maximal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-maximal-response-time.png)
 ![api-user-by-id-average-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-average-response-time.png)
+#### `api-user-by-id` Failures
+![api-user-by-id-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-by-id-failures.png)
 ####  `api-user-by-name` Response Time
 ![api-user-by-name-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-response-time.png)
 ![api-user-by-name-minimal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-minimal-response-time.png)
 ![api-user-by-name-median-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-median-response-time.png)
 ![api-user-by-name-maximal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-maximal-response-time.png)
 ![api-user-by-name-average-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-average-response-time.png)
+#### `api-user-by-name` Failures
+![api-user-by-name-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-by-name-failures.png)
