@@ -1,12 +1,11 @@
-# Openshift.io Auth Services Performance
+# Openshift.io Auth Services Performance Evaluation
 These tests are intended to measure performance of the REST endpoints of the OSIO Auth Services
 as well as the user experience such as login from the OSIO UI.
 
 ## Environment
 The tested server is the OSIO [Auth Services deployed in prod-preview](https://auth.prod-preview.openshift.io/api/status)
 
-### Latest Results Trends
-The summary results are uploaded to the [Zabbix](https://zabbix.devshift.net:9443/zabbix/charts.php?fullscreen=1&graphid=8575) Monitoring system.
+
 
 ## Test setup
 The test in the environment is executed with 10 tested OSIO user accounts that has a GitHub account linked.
@@ -14,7 +13,11 @@ The user accounts are evenly spread between 10 individual client nodes
 in the [OsioPerf Lab](https://github.com/fabric8-services/fabric8-auth-tests/blob/master/performance/README.md)
 from whose the requests are sent via 100 simultaneous clients (simulated users) 
 (10 parallel clients per node). Each simulated user waits randomly between 1 to 10 seconds
-before sending another request and the whole load test runs for 5 minutes. 
+before sending another request.
+
+The whole performance test suite is executed regularly each 30 minutes
+while a single suite run takes a login phase + 5 minutes of load phase. The summary results of each run
+are uploaded to the [Zabbix](https://zabbix.devshift.net:9443/zabbix/charts.php?fullscreen=1&graphid=8575) monitoring system. 
 
 ## Scenarios
 There are two phases of testing:
