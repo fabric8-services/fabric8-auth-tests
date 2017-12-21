@@ -3,24 +3,23 @@ These tests are intended to measure performance of the REST endpoints of the OSI
 as well as the user experience such as login from the OSIO UI.
 
 ## Environment
-The tested server is the OSIO [Auth Services deployed in prod-preview](https://auth.prod-preview.openshift.io/api/status)
-
-
+The tested server is the OSIO [Auth Services deployed in prod-preview](https://auth.prod-preview.openshift.io/api/status).
+The clients to the tested server are deployed on the client nodes 
+of the [OsioPerf Lab](https://github.com/fabric8-services/fabric8-auth-tests/blob/master/performance/README.md).
 
 ## Test setup
 The test in the environment is executed with 10 tested OSIO user accounts that has a GitHub account linked.
-The user accounts are evenly spread between 10 individual client nodes 
-in the [OsioPerf Lab](https://github.com/fabric8-services/fabric8-auth-tests/blob/master/performance/README.md)
-from whose the requests are sent via 100 simultaneous clients (simulated users) 
-(10 parallel clients per node). Each simulated user waits randomly between 1 to 10 seconds
+The user accounts are evenly spread between 10 individual client nodes of the OsioPerf Lab
+from whose the requests are sent via 100 simultaneous clients (=simulated users). Each simulated user waits randomly between 1 to 10 seconds
 before sending another request.
 
 The whole performance test suite is executed regularly each 30 minutes
-while a single suite run takes a login phase + 5 minutes of load phase. The summary results of each run
-are uploaded to the [Zabbix](https://zabbix.devshift.net:9443/zabbix/charts.php?fullscreen=1&graphid=8575) monitoring system. 
+while a single run takes a login phase + 5 minutes of load phase (see below). The summary results of each run
+are uploaded to the [Zabbix](https://zabbix.devshift.net:9443/zabbix/charts.php?fullscreen=1&graphid=8575) monitoring system
+to track the results' history. 
 
 ## Scenarios
-There are two phases of testing:
+The performance test suite is divided into two phases of testing:
  * *Prepare* - where each test user is logged in via UI once, while times to certain checkpoints are measured.
  * *Load* - where requests are sent to the tested endpoints repeatedly, while the response time is measured. 
 
