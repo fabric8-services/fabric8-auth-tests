@@ -102,45 +102,47 @@ if [[ "$ZABBIX_REPORT_ENABLED" = "true" ]]; then
 fi
 
 REPORT_FILE=$JOB_BASE_NAME-$BUILD_NUMBER-report.md
-sed -e "s,@@JOB_BASE_NAME@@,$JOB_BASE_NAME,g" report-template.md |
-sed -e "s,@@BUILD_NUMBER@@,$BUILD_NUMBER,g" > $REPORT_FILE
+sed -e "s,@@JOB_BASE_NAME@@,$JOB_BASE_NAME,g" results-template.md |
+sed -e "s,@@BUILD_NUMBER@@,$BUILD_NUMBER,g" > $RESULTS_FILE
 
 # Create HTML report
 function filterZabbixValue {
    VALUE=`cat $1 | grep $2 | head -n 1 | cut -d " " -f 4`
    sed -i -e "s,$3,$VALUE,g" $4
 }
-filterZabbixValue $ZABBIX_LOG "open-login-page-time.min" "@@OPEN_LOGIN_PAGE_TIME_MIN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "open-login-page-time.median" "@@OPEN_LOGIN_PAGE_TIME_MEDIAN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "open-login-page-time.max" "@@OPEN_LOGIN_PAGE_TIME_MAX@@" $REPORT_FILE;
+filterZabbixValue $ZABBIX_LOG "open-login-page-time.min" "@@OPEN_LOGIN_PAGE_TIME_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "open-login-page-time.median" "@@OPEN_LOGIN_PAGE_TIME_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "open-login-page-time.max" "@@OPEN_LOGIN_PAGE_TIME_MAX@@" $RESULTS_FILE;
 
-filterZabbixValue $ZABBIX_LOG "login-time.min" "@@LOGIN_TIME_MIN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "login-time.median" "@@LOGIN_TIME_MEDIAN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "login-time.max" "@@LOGIN_TIME_MAX@@" $REPORT_FILE;
+filterZabbixValue $ZABBIX_LOG "login-time.min" "@@LOGIN_TIME_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "login-time.median" "@@LOGIN_TIME_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "login-time.max" "@@LOGIN_TIME_MAX@@" $RESULTS_FILE;
 
-filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_min" "@@AUTH_API_USER_MIN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_median" "@@AUTH_API_USER_MEDIAN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_max" "@@AUTH_API_USER_MAX@@" $REPORT_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_min" "@@AUTH_API_USER_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_median" "@@AUTH_API_USER_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_max" "@@AUTH_API_USER_MAX@@" $RESULTS_FILE;
 
-filterZabbixValue $ZABBIX_LOG "auth-api-user-github-token-rt_min" "@@AUTH_API_USER_GITHUB_TOKEN_MIN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "auth-api-user-github-token-rt_median" "@@AUTH_API_USER_GITHUB_TOKEN_MEDIAN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "auth-api-user-github-token-rt_max" "@@AUTH_API_USER_GITHUB_TOKEN_MAX@@" $REPORT_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-user-github-token-rt_min" "@@AUTH_API_USER_GITHUB_TOKEN_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-user-github-token-rt_median" "@@AUTH_API_USER_GITHUB_TOKEN_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-user-github-token-rt_max" "@@AUTH_API_USER_GITHUB_TOKEN_MAX@@" $RESULTS_FILE;
 
-filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_min" "@@AUTH_API_TOKEN_REFRESH_MIN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_median" "@@AUTH_API_TOKEN_REFRESH_MEDIAN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_max" "@@AUTH_API_TOKEN_REFRESH_MAX@@" $REPORT_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_min" "@@AUTH_API_TOKEN_REFRESH_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_median" "@@AUTH_API_TOKEN_REFRESH_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_max" "@@AUTH_API_TOKEN_REFRESH_MAX@@" $RESULTS_FILE;
 
-filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_min" "@@API_USER_BY_ID_MIN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_median" "@@API_USER_BY_ID_MEDIAN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_max" "@@API_USER_BY_ID_MAX@@" $REPORT_FILE;
+filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_min" "@@API_USER_BY_ID_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_median" "@@API_USER_BY_ID_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_max" "@@API_USER_BY_ID_MAX@@" $RESULTS_FILE;
 
-filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_min" "@@API_USER_BY_NAME_MIN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_median" "@@API_USER_BY_NAME_MEDIAN@@" $REPORT_FILE;
-filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_max" "@@API_USER_BY_NAME_MAX@@" $REPORT_FILE;
+filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_min" "@@API_USER_BY_NAME_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_median" "@@API_USER_BY_NAME_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-user-by-name-rt_max" "@@API_USER_BY_NAME_MAX@@" $RESULTS_FILE;
 
 REPORT_TIMESTAMP=`date '+%Y-%m-%d %H:%M:%S (%Z)'`
-sed -i -e "s,@@TIMESTAMP@@,$REPORT_TIMESTAMP,g" $REPORT_FILE
+sed -i -e "s,@@TIMESTAMP@@,$REPORT_TIMESTAMP,g" $RESULTS_FILE
 
+REPORT_FILE=$JOB_BASE_NAME-report.md
+cat README.md $RESULTS_FILE > $REPORT_FILE
 grip --export $REPORT_FILE
 
 echo " Shut Locust slaves down"
