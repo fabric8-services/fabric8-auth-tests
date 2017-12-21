@@ -101,7 +101,7 @@ if [[ "$ZABBIX_REPORT_ENABLED" = "true" ]]; then
 	zabbix_sender -vv -i $ZABBIX_LOG -T -z $ZABBIX_SERVER -p $ZABBIX_PORT;
 fi
 
-REPORT_FILE=$JOB_BASE_NAME-$BUILD_NUMBER-report.md
+RESULTS_FILE=$JOB_BASE_NAME-$BUILD_NUMBER-results.md
 sed -e "s,@@JOB_BASE_NAME@@,$JOB_BASE_NAME,g" results-template.md |
 sed -e "s,@@BUILD_NUMBER@@,$BUILD_NUMBER,g" > $RESULTS_FILE
 
