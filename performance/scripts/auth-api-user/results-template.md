@@ -1,5 +1,6 @@
 # Results (@@JOB_BASE_NAME@@ #@@BUILD_NUMBER@@ @@TIMESTAMP@@)
 ## Summary
+The following tables show the final results taken and computed from a single test run - i.e. after and by running the login phase and the 5 minutes of the load phase.
 ### Prepare Test
 | Scenario | Minimal | Median | Maximal |
 | :--- | ---: | ---: | ---: |
@@ -16,14 +17,23 @@
 |`api-user-by-name`| @@API_USER_BY_NAME_MIN@@ ms | @@API_USER_BY_NAME_MEDIAN@@ ms | @@API_USER_BY_NAME_MAX@@ ms |
 
 ## Test charts
+The charts bellow show the whole duration of all the phases for each scenario - i.e. what lead to the final results shown above in the summary.
 
 ### Prepare Test
+The following charts show the respective times of UI of each test user as they were logged in one by one.
+So the first value in the chart is for the first user, the second value is for the second user and so on.
+
 #### `open-login-page-time`
 ![open-login-page-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-open-login-page-time.png)
+
 #### `login-time`
 ![login-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-login-time.png)
 
 ### Load Test
+In these charts, the value shown in each point of time is the metric (minimal, median, maximal and average value) of the response time
+computed for a time window from the start to the respective point of time. So it is a floating metric.
+
+That is the reason for the values of the maximals always go up.
 #### `auth-api-user` Response Time
 ![auth-api-user-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-response-time.png)
 ![auth-api-user-minimal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-minimal-response-time.png)
