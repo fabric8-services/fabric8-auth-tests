@@ -5,6 +5,10 @@
     properties:
        - ownership:
            owner: pmacik
+       - authorization:
+           anonymous:
+               - job-read
+               - job-discover
        - build-discarder:
            days-to-keep: 28
     parameters:
