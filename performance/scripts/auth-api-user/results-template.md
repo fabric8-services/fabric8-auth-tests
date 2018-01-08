@@ -78,4 +78,4 @@ That is the reason for the values of the maximals always go up.
 ![api-user-by-name-maximal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-maximal-response-time.png)
 ![api-user-by-name-average-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-average-response-time.png)
 #### `api-user-by-name` Failures
-![api-user-by-name-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-by-name-failures.png)
+![api-user-by-name-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-failures.png)
