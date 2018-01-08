@@ -98,6 +98,10 @@
             - file:
                 credential-id: pmacik-osioperftestX.users.properties
                 variable: USERS_PROPERTIES_FILE
+            - username-password-separated:
+                credential-id: grip-creds
+                username: GRIP_USER
+                password: GRIP_PASS
     builders:
         - shell: |-
             cd performance/scripts/$JOB_BASE_NAME

@@ -153,7 +153,11 @@ sed -i -e "s,@@TIMESTAMP@@,$REPORT_TIMESTAMP,g" $RESULTS_FILE
 
 REPORT_FILE=$JOB_BASE_NAME-report.md
 cat README.md $RESULTS_FILE > $REPORT_FILE
-grip --export $REPORT_FILE
+if [ -z "$GRIP_USER" ]; then
+	grip --export $REPORT_FILE
+else
+	grip --user=$GRIP_USER --pass=$GRIP_PASS --export $REPORT_FILE
+fi
 
 echo " Shut Locust slaves down"
 $COMMON/__stop-locust-slaves.sh
