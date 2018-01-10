@@ -47,7 +47,7 @@ public class PlannerUiPerformanceProbe {
 
    private static long start = -1;
 
-   private static final long TIMEOUT = 60;
+   private static final long TIMEOUT = 300;
 
    public static void main(String[] args) {
       HashMap<Metric, LinkedList<Long>> metricMap = new HashMap<>();
