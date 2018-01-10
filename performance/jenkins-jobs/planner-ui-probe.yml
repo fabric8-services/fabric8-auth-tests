@@ -22,6 +22,10 @@
            name: SERVER_PORT
            default: '443'
            description: Server port.
+       - string:
+           name: PLANNER_SPACE
+           default: /openshiftio/openshiftio
+           description: Planner space part of the URL of the planner UI.
        - bool:
            name: ZABBIX_REPORT_ENABLED
            default: true
