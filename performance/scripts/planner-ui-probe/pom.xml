@@ -11,6 +11,7 @@
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <server.host>https://openshift.io</server.host>
       <server.port>443</server.port>
+      <planner.space>/openshiftio/openshiftio</planner.space>
    </properties>
    <dependencies>
       <dependency>
@@ -65,6 +66,10 @@
                   <systemProperty>
                      <key>server.port</key>
                      <value>${server.port}</value>
+                  </systemProperty>
+                  <systemProperty>
+                     <key>planner.space</key>
+                     <value>${planner.space}</value>
                   </systemProperty>
                </systemProperties>
             </configuration>

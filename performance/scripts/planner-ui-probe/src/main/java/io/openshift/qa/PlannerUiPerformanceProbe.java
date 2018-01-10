@@ -89,7 +89,7 @@ public class PlannerUiPerformanceProbe {
             final long login = _stop();
             log.info(uName + "-" + Metric.Login.logName() + ":" + login + "ms");
             _start();
-            driver.get(System.getProperty("server.host") + ":" + System.getProperty("server.port") + "/openshiftio/openshiftio/plan");
+            driver.get(System.getProperty("server.host") + ":" + System.getProperty("server.port") + System.getProperty("planner.space") + "/plan");
             new WebDriverWait(driver, TIMEOUT).until(ExpectedConditions.elementToBeClickable(By.cssSelector(".f8-wi__list-title")));
             final long loadPlanner = _stop();
             log.info(uName + "-" + Metric.LoadPlanner.logName() + ":" + loadPlanner + "ms");
