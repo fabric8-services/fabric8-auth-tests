@@ -1,0 +1,74 @@
+- job:
+    name: 'planner-ui-probe-prod-preview'
+    project-type: freestyle
+    node: osioperf-server-1-centos7-x86_64
+    properties:
+       - ownership:
+           owner: pmacik
+       - build-discarder:
+           days-to-keep: 28
+    parameters:
+       - choice:
+           name: SERVER_SCHEME
+           choices:
+               - 'https'
+               - 'http'
+           description: Server HTTP scheme.
+       - string:
+           name: SERVER_HOST
+           default: prod-preview.openshift.io
+           description: Server address.
+       - string:
+           name: SERVER_PORT
+           default: '443'
+           description: Server port.
+       - string:
+           name: PLANNER_SPACE
+           default: /pmacik@redhat.com/osioperf-test
+           description: Planner space part of the URL of the planner UI.
+       - bool:
+           name: ZABBIX_REPORT_ENABLED
+           default: true
+           description: Checked if a report is to be sent to the Zabbix instance.
+       - string:
+           name: ZABBIX_SERVER
+           default: zabbix.devshift.net
+           description: An address of Zabbix server.
+       - string:
+           name: ZABBIX_PORT
+           default: '10051'
+           description: A port of Zabbix server used by zabbix_sender utility.
+       - string:
+           name: ZABBIX_HOST
+           default: planner-ui.prod-preview
+           description: A hostname in Zabbix the report is for.
+       - string:
+           name: ITERATIONS
+           default: "10"
+           description: A number of iteration for each user to perform.
+    scm:
+        - git:
+            url: https://github.com/fabric8-services/fabric8-auth-tests.git
+            branches:
+                - '*/master'
+    triggers:
+        - timed: H/15 * * * *
+    wrappers:
+        - workspace-cleanup:
+            dirmatch: false
+        - credentials-binding:
+            - text:
+                credential-id: osiperftest.pm.properties
+                variable: USERS_PROPERTIES
+    builders:
+        - shell: |-
+            cd performance/scripts/$JOB_BASE_NAME
+            ./run.sh
+    concurrent: false
+    description: null
+    disabled: false
+    publishers:
+       - archive:
+           artifacts: '**/*.log'
+           allow-empty: 'true'
+           fingerprint: true
