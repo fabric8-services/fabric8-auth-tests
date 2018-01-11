@@ -90,7 +90,7 @@ public class PlannerUiPerformanceProbe {
             log.info(uName + "-" + Metric.Login.logName() + ":" + login + "ms");
             _start();
             driver.get(System.getProperty("server.host") + ":" + System.getProperty("server.port") + System.getProperty("planner.space") + "/plan");
-            new WebDriverWait(driver, TIMEOUT).until(ExpectedConditions.elementToBeClickable(By.cssSelector(".f8-wi__list-title")));
+            new WebDriverWait(driver, TIMEOUT).until(ExpectedConditions.elementToBeClickable(By.cssSelector(".f8-wi-list-wrap")));
             final long loadPlanner = _stop();
             log.info(uName + "-" + Metric.LoadPlanner.logName() + ":" + loadPlanner + "ms");
             _start();
