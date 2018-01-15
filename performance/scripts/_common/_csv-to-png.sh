@@ -22,5 +22,5 @@ set datafile separator ";"
 set xlabel "$X_LABEL"
 set ylabel "$Y_LABEL"
 set grid
-plot "$INPUT" u 1:2 t ""
+plot "$INPUT" u 1:2 w linespoints t ""
 eor
