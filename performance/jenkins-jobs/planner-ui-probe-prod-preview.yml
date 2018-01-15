@@ -62,7 +62,7 @@
                 variable: USERS_PROPERTIES
     builders:
         - shell: |-
-            cd performance/scripts/$JOB_BASE_NAME
+            cd performance/scripts/planner-ui-probe
             ./run.sh
     concurrent: false
     description: null
