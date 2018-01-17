@@ -17,70 +17,84 @@ mvn -f $LOGIN_USERS/pom.xml clean compile
 cat $USERS_PROPERTIES_FILE > $LOGIN_USERS/target/classes/users.properties
 export TOKENS_FILE=`readlink -f /tmp/osioperftest.tokens`
 MVN_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-mvn.log
-mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Dauth.server.port=$AUTH_PORT -Duser.tokens.file=$TOKENS_FILE
+#mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Dauth.server.port=$AUTH_PORT -Duser.tokens.file=$TOKENS_FILE
 LOGIN_USERS_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-login-users.log
 cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_LOG
 
+if [ "$RUN_LOCALLY" != "true" ]; then
 	echo "#!/bin/bash
 export USER_TOKENS=\"0;0\"
 " > $ENV_FILE-master;
 
-TOKEN_COUNT=`cat $TOKENS_FILE | wc -l`
-i=1
-s=1
-rm -rf $TOKENS_FILE-slave-*;
-if [ $TOKEN_COUNT -ge $SLAVES ]; then
-	while [ $i -le $TOKEN_COUNT ]; do
-		sed "${i}q;d" $TOKENS_FILE >> $TOKENS_FILE-slave-$s;
-		i=$((i+1));
-		if [ $s -lt $SLAVES ]; then
-			s=$((s+1));
-		else
-			s=1;
-		fi;
-	done;
-else
-	while [ $s -le $SLAVES ]; do
-		sed "${i}q;d" $TOKENS_FILE >> $TOKENS_FILE-slave-$s;
-		s=$((s+1));
-		if [ $i -lt $TOKEN_COUNT ]; then
+	TOKEN_COUNT=`cat $TOKENS_FILE | wc -l`
+	i=1
+	s=1
+	rm -rf $TOKENS_FILE-slave-*;
+	if [ $TOKEN_COUNT -ge $SLAVES ]; then
+		while [ $i -le $TOKEN_COUNT ]; do
+			sed "${i}q;d" $TOKENS_FILE >> $TOKENS_FILE-slave-$s;
 			i=$((i+1));
-		else
-			i=1;
-		fi;
-	done;
-fi
-
-for s in $(seq 1 $SLAVES); do
-	echo "#!/bin/bash
+			if [ $s -lt $SLAVES ]; then
+				s=$((s+1));
+			else
+				s=1;
+			fi;
+		done;
+	else
+		while [ $s -le $SLAVES ]; do
+			sed "${i}q;d" $TOKENS_FILE >> $TOKENS_FILE-slave-$s;
+			s=$((s+1));
+			if [ $i -lt $TOKEN_COUNT ]; then
+				i=$((i+1));
+			else
+				i=1;
+			fi;
+		done;
+	fi
+	for s in $(seq 1 $SLAVES); do
+		echo "#!/bin/bash
 export USER_TOKENS=\"$(cat $TOKENS_FILE-slave-$s)\"
 " > $ENV_FILE-slave-$s;
-done
+	done
+else
+	echo "#!/bin/bash
+export USER_TOKENS=\"`cat $TOKENS_FILE`\"
+" > $ENV_FILE-master;
+fi
 
 echo " Prepare locustfile template"
 ./_prepare-locustfile.sh auth-api-user.py
 
-echo " Shut Locust master down"
-$COMMON/__stop-locust-master.sh
+if [ "$RUN_LOCALLY" != "true" ]; then
+	echo " Shut Locust master down"
+	$COMMON/__stop-locust-master.sh
 
-echo " Shut Locust slaves down"
-SLAVES=10 $COMMON/__stop-locust-slaves.sh
+	echo " Shut Locust slaves down"
+	SLAVES=10 $COMMON/__stop-locust-slaves.sh
 
-echo " Start Locust master waiting for slaves"
-$COMMON/__start-locust-master.sh
+	echo " Start Locust master waiting for slaves"
+	$COMMON/__start-locust-master.sh
 
-echo " Start all the Locust slaves"
-$COMMON/__start-locust-slaves.sh
-
+	echo " Start all the Locust slaves"
+	$COMMON/__start-locust-slaves.sh
+else
+	echo " Shut Locust master down"
+	$COMMON/__stop-locust-master-standalone.sh
+	echo " Run Locust locally"
+	$COMMON/__start-locust-master-standalone.sh
+fi
 echo " Run test for $DURATION seconds"
+
 sleep $DURATION
+if [ "$RUN_LOCALLY" != "true" ]; then
+	echo " Shut Locust master down"
+	$COMMON/__stop-locust-master.sh TERM
 
-echo " Shut Locust master down"
-$COMMON/__stop-locust-master.sh TERM
-
-echo " Download locust reports from Locust master"
-$COMMON/_gather-locust-reports.sh
-
+	echo " Download locust reports from Locust master"
+	$COMMON/_gather-locust-reports.sh
+else
+	$COMMON/__stop-locust-master-standalone.sh TERM
+fi
 echo " Extract CSV data from logs"
 $COMMON/_locust-log-to-csv.sh 'GET auth-api-user ' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
 $COMMON/_locust-log-to-csv.sh 'GET auth-api-user-github-token' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
@@ -171,8 +185,10 @@ else
 	grip --user=$GRIP_USER --pass=$GRIP_PASS --export $REPORT_FILE
 fi
 
-echo " Shut Locust slaves down"
-$COMMON/__stop-locust-slaves.sh
+if [ "$RUN_LOCALLY" != "true" ]; then
+	echo " Shut Locust slaves down"
+	$COMMON/__stop-locust-slaves.sh
+fi
 
 echo " Check for errors in Locust master log"
 if [[ "0" -ne `cat $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log | grep 'Error report' | wc -l` ]]; then echo '[:(] THERE WERE ERRORS OR FAILURES!!!'; else echo '[:)] NO ERRORS OR FAILURES DETECTED.'; fi
