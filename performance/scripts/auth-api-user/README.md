@@ -69,3 +69,13 @@ Content-Type: application/json
 GET /api/token?for=https://github.com
 Authorization: Bearer <auth_token>
 ```
+
+## How to run the tests locally
+By default the load test executed by Locust tool runs in a distributed mode, i.e. uses remote access
+to the Master and Slave nodes via SSH to start Locust process on those nodes to load the tested system
+from a different places.
+
+However, it is possible to switch the test to the local execution. To do that simply set the environment
+variable `RUN_LOCALLY=true`. The easiest way is to uncomment the respective line in `_setenv.sh` file.
+
+To run the test, configure the test in `_setenv.sh` file and run the `run.sh` script.
