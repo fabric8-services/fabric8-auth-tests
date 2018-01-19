@@ -13,4 +13,4 @@ $ sudo yum install chromium chromium-headless chromedriver
 Usage
 -----
 
-To run, set the variables in the `_setenv.sh` file and run `run.sh`.
+To run the test, configure the test in `_setenv.sh` file and run the `run.sh` script.
