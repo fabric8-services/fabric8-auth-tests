@@ -12,6 +12,9 @@
 # Server machine address.
 #export SERVER_HOST=openshift.io
 
+# Planner space part of the URL of the planner UI.
+#export PLANNER_SPACE=/openshiftio/opehshiftio
+
 # Server port.
 #export SERVER_PORT=443
 
