@@ -1,5 +1,12 @@
 # Automated Performance Tests for Openshift.io
 
+## There are the following scenarios here:
+ * ### Auth Services Performance Evaluation ([`auth-api-user`](https://github.com/fabric8-services/fabric8-auth-tests/tree/master/performance/scripts/auth-api-user))
+   These tests measure performance (response time) of the REST endpoints of the OSIO Auth Services as well as the user experience such as login from the OSIO UI.
+     
+ * ### Planner UI Login Response Time Probe ([`planner-ui-probe`](https://github.com/fabric8-services/fabric8-auth-tests/tree/master/performance/scripts/planner-ui-probe))
+   Simple test for logging users in the Planner UI using the Log In web and measuring how long does it take.
+
 ## Resources:
 
  * [GitHub repository `fabric8-services/fabric8-auth-tests`](https://github.com/fabric8-services/fabric8-auth-tests) - Under `performance` directory
