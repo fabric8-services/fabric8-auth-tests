@@ -15,7 +15,7 @@ before sending another request.
 
 The whole performance test suite is executed regularly each 30 minutes
 while a single run takes a login phase + 5 minutes of load phase (see below). The summary results of each run
-are uploaded to the [Zabbix](https://zabbix.devshift.net:9443/zabbix/charts.php?fullscreen=1&graphid=8575) monitoring system
+are uploaded to the [Zabbix](https://zabbix.devshift.net:9443/zabbix/screens.php?elementid=32&fullscreen=1) monitoring system
 to track the results' history. 
 
 ## Scenarios
