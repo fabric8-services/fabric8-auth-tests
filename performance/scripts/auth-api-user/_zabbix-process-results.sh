@@ -2,19 +2,14 @@
 
 source _setenv.sh
 
-if [ ! -f "$1" ]; then
-	echo "File '$1' not found! Skipping Zabbix reporting... !!!"
-	exit 0
-fi
-
 INPUT=$1
 ENDPOINT=${2-"GET","/api/user"}
 METRIC_PREFIX=${3-auth-api-user}
 TIMESTAMP=`date +%s`
-ZABBIX_LOG_FILE=$1-zabbix.log
+ZABBIX_LOG_FILE=$INPUT-zabbix.log
 
 VALUES=(`cat $INPUT-report_requests.csv | grep -F "$ENDPOINT" | cut -d ',' -f 3-10 | tr ',' ' '`)
-VAL_REQ=$((${VALUES[0]} + ${VALUES[1]}))
+VAL_REQ=$((${VALUES[0]}+${VALUES[1]}))
 VAL_FAIL=${VALUES[1]}
 VAL_FAIL_RATE=`echo "100*$VAL_FAIL/$VAL_REQ" | bc -l`
 VAL_MED=${VALUES[2]}
@@ -29,7 +24,7 @@ echo "$ZABBIX_HOST $METRIC_PREFIX-rt_median $TIMESTAMP $VAL_MED" >> $ZABBIX_LOG_
 echo "$ZABBIX_HOST $METRIC_PREFIX-rt_min $TIMESTAMP $VAL_MIN" >> $ZABBIX_LOG_FILE
 echo "$ZABBIX_HOST $METRIC_PREFIX-rt_max $TIMESTAMP $VAL_MAX" >> $ZABBIX_LOG_FILE
 
-DISTR=(`cat $1-report_distribution.csv | sed -e 's/ /","/' | grep -F "$ENDPOINT" | tr ',' ' '`)
+DISTR=(`cat $INPUT-report_distribution.csv | sed -e 's/ /","/' | grep -F "$ENDPOINT" | tr ',' ' '`)
 #echo "$ZABBIX_HOST $METRIC_PREFIX-rt_50 $TIMESTAMP ${DISTR[4]}" >> $ZABBIX_LOG_FILE # median
 echo "$ZABBIX_HOST $METRIC_PREFIX-rt_66 $TIMESTAMP ${DISTR[5]}" >> $ZABBIX_LOG_FILE
 echo "$ZABBIX_HOST $METRIC_PREFIX-rt_75 $TIMESTAMP ${DISTR[6]}" >> $ZABBIX_LOG_FILE
