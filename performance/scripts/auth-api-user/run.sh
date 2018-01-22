@@ -115,11 +115,11 @@ $COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-login-time.csv "Login Time" 
 
 echo " Prepare results for Zabbix"
 rm -rvf *-zabbix.log
-./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER-report_requests.csv '"GET","auth-api-user"' "auth-api-user"
-./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER-report_requests.csv '"GET","auth-api-user-github-token"' "auth-api-user-github-token"
-./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER-report_requests.csv '"POST","auth-api-token-refresh"' "auth-api-token-refresh"
-./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER-report_requests.csv '"GET","api-user-by-id"' "api-user-by-id"
-./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER-report_requests.csv '"GET","api-user-by-name"' "api-user-by-name"
+./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER '"GET","auth-api-user"' "auth-api-user"
+./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER '"GET","auth-api-user-github-token"' "auth-api-user-github-token"
+./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER '"POST","auth-api-token-refresh"' "auth-api-token-refresh"
+./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER '"GET","api-user-by-id"' "api-user-by-id"
+./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER '"GET","api-user-by-name"' "api-user-by-name"
 
 ZABBIX_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-zabbix.log
 if [[ "$ZABBIX_REPORT_ENABLED" = "true" ]]; then
