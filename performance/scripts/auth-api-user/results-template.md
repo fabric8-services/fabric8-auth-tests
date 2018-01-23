@@ -45,6 +45,7 @@ That is the reason for the values of the maximals always go up.
 ![auth-api-user-median-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-median-response-time.png)
 ![auth-api-user-maximal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-maximal-response-time.png)
 ![auth-api-user-average-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-average-response-time.png)
+![auth-api-user-rt-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-rt-histo.png)
 #### `auth-api-user` Failures
 ![auth-api-user-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-failures.png)
 #### `auth-api-token-refresh` Response Time
@@ -53,6 +54,7 @@ That is the reason for the values of the maximals always go up.
 ![auth-api-token-median-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-median-response-time.png)
 ![auth-api-token-maximal-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-maximal-response-time.png)
 ![auth-api-token-average-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-average-response-time.png)
+![auth-api-token-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-rt-histo.png)
 #### `auth-api-token-refresh` Failures
 ![auth-api-token-refresh-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-failures.png)
 #### `auth-api-user-github-token` Response Time
@@ -61,6 +63,7 @@ That is the reason for the values of the maximals always go up.
 ![auth-api-user-github-token-median-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-median-response-time.png)
 ![auth-api-user-github-token-maximal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-maximal-response-time.png)
 ![auth-api-user-github-token-average-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-average-response-time.png)
+![auth-api-user-github-token-rt-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-rt-histo.png)
 #### `auth-api-user-github-token` Failures
 ![auth-api-user-github-token-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-failures.png)
 #### `api-user-by-id` Response Time
@@ -69,6 +72,7 @@ That is the reason for the values of the maximals always go up.
 ![api-user-by-id-median-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-median-response-time.png)
 ![api-user-by-id-maximal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-maximal-response-time.png)
 ![api-user-by-id-average-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-average-response-time.png)
+![api-user-by-id-rt-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-rt-histo.png)
 #### `api-user-by-id` Failures
 ![api-user-by-id-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-by-id-failures.png)
 ####  `api-user-by-name` Response Time
@@ -77,5 +81,6 @@ That is the reason for the values of the maximals always go up.
 ![api-user-by-name-median-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-median-response-time.png)
 ![api-user-by-name-maximal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-maximal-response-time.png)
 ![api-user-by-name-average-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-average-response-time.png)
+![api-user-by-name-rt-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-rt-histo.png)
 #### `api-user-by-name` Failures
 ![api-user-by-name-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-failures.png)
