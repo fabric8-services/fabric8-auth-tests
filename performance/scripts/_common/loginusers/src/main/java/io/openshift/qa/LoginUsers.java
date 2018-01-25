@@ -129,7 +129,6 @@ public class LoginUsers {
       fw.append(tokens.toString());
       fw.close();
       System.exit(0);
-      System.exit(0);
    }
 
    private static void _start() {
