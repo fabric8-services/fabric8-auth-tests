@@ -10,7 +10,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<auth.server.address>https://auth.prod-preview.openshift.io</auth.server.address>
-		<auth.server.port>443</auth.server.port>
+		<auth.client.id>740650a2-9c44-4db5-b067-a3d1b2cd2d01</auth.client.id>
 		<user.tokens.file>user.tokens</user.tokens.file>
 	</properties>
 	<dependencies>
@@ -36,6 +36,23 @@
 			<version>20171018</version>
 		</dependency>
 	</dependencies>
+	<profiles>
+		<profile>
+			<id>auth</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<login.class>io.openshift.qa.LoginUsers</login.class>
+			</properties>
+		</profile>
+		<profile>
+			<id>oauth2</id>
+			<properties>
+				<login.class>io.openshift.qa.LoginUsersOauth2</login.class>
+			</properties>
+		</profile>
+	</profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -57,19 +74,19 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>io.openshift.qa.LoginUsers</mainClass>
+					<mainClass>${login.class}</mainClass>
 					<systemProperties>
 						<systemProperty>
 							<key>auth.server.address</key>
 							<value>${auth.server.address}</value>
 						</systemProperty>
 						<systemProperty>
-							<key>auth.server.port</key>
-							<value>${auth.server.port}</value>
-						</systemProperty>
-						<systemProperty>
 							<key>user.tokens.file</key>
 							<value>${user.tokens.file}</value>
+						</systemProperty>
+						<systemProperty>
+							<key>auth.client.id</key>
+							<value>${auth.client.id}</value>
 						</systemProperty>
 					</systemProperties>
 				</configuration>
