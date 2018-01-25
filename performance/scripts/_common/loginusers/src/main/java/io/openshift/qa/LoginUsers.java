@@ -75,7 +75,7 @@ public class LoginUsers {
          arguments.add("--window-size=1280,960");
          op.addArguments(arguments);
          final WebDriver driver = new ChromeDriver(op);
-         final String startUrl = System.getProperty("auth.server.address") + ":" + System.getProperty("auth.server.port") + "/api/login?redirect=http%3A%2F%2Flocalhost%3A8090%2Flink.html";
+         final String startUrl = System.getProperty("auth.server.address") + "/api/login?redirect=http%3A%2F%2Flocalhost%3A8090%2Flink.html";
          log.log(Level.FINE, "Logging user " + uName + " in...");
          _start();
          driver.get(startUrl);

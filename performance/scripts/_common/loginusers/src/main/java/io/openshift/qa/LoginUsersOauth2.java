@@ -1,11 +1,13 @@
 package io.openshift.qa;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -72,9 +74,9 @@ public class LoginUsersOauth2 {
 
       Properties usersProperties = new Properties();
 
-      final String baseUrl = System.getProperty("auth.server.address") + ":" + System.getProperty("auth.server.port");
+      final String baseUrl = System.getProperty("auth.server.address");
       final String clientId = System.getProperty("auth.client.id", "740650a2-9c44-4db5-b067-a3d1b2cd2d01");
-      final String redirectUrl = "https://auth.prod-preview.openshift.io/api/status";
+      final String redirectUrl = baseUrl + "/api/status";
 
       usersProperties.load(new InputStreamReader(LoginUsersOauth2.class.getResourceAsStream("/users.properties")));
       for (Map.Entry<Object, Object> user : usersProperties.entrySet()) {
@@ -95,7 +97,7 @@ public class LoginUsersOauth2 {
             + "&state=" + uuid.toString();
          log.log(Level.FINE, "Logging user " + uName + " in...");
          _start();
-         log.info(" > GET " + startUrl);
+         log.fine(" > GET " + startUrl);
          driver.get(startUrl);
          new WebDriverWait(driver, TIMEOUT).until(ExpectedConditions.elementToBeClickable(By.id("kc-login")));
          final long openLoginPage = _stop();
@@ -105,9 +107,9 @@ public class LoginUsersOauth2 {
          pass.sendKeys(uPassword);
          _start();
          pass.submit();
-         (new WebDriverWait(driver, TIMEOUT)).until(ExpectedConditions.urlContains(redirectUrl));
+         (new WebDriverWait(driver, TIMEOUT)).until(ExpectedConditions.urlContains(uuid.toString()));
          String redirectedUrl = driver.getCurrentUrl();
-         log.info(" < " + redirectedUrl);
+         log.fine(" < " + redirectedUrl);
          final long getCode = _stop();
          log.info(uName + "-" + MetricAuth.GetCode.logName() + ":" + getCode + "ms");
          String code = null, returnState = null;
@@ -132,21 +134,42 @@ public class LoginUsersOauth2 {
             throw new Exception("Return state (" + returnState + ") should be equal to the request state (" + uuid.toString() + ")");
          }
          HttpClient http = HttpClients.createDefault();
+
          HttpPost post = new HttpPost(baseUrl + "/api/token");
+         //*/ payload as x-www-form-urlencoded
          post.setHeader("Content-Type", "application/x-www-form-urlencoded");
          final String bodyString = "grant_type=authorization_code"
             + "&client_id=" + clientId
             + "&code=" + code
             + "&redirect_uri=" + redirectUrl;
-         log.info(" > POST " + post.getURI());
-         log.info(" > " + bodyString);
+         /*/ //payload as JSON
+         post.setHeader("Content-Type", "application/json");
+         final String bodyString = "{\"grant_type\":\"authorization_code\","
+            + "\"client_id\":\"" + clientId + "\","
+            + "\"code\":\"" + code + "\","
+            + "\"redirect_uri\":\"" + redirectUrl + "\"}";
+         //*/
+         log.fine(" > POST " + post.getURI());
+         for (Header h : post.getAllHeaders()) {
+            log.fine(" > " + h.getName() + ": " + h.getValue());
+         }
+         log.fine(" > " + bodyString);
          post.setEntity(new StringEntity(bodyString));
          _start();
          HttpResponse response = http.execute(post);
+         String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
          final long login = _stop();
+         final JSONObject json = new JSONObject(responseString);
+         synchronized (tokens) {
+            tokens.append(json.getString("access_token"))
+                  .append(";")
+                  .append(json.getString("refresh_token"))
+                  .append("\n");
+         }
          log.info(uName + "-" + MetricAuth.Login.logName() + ":" + login + "ms");
-         log.info(" < " + response.toString());
-         log.info(" < " + EntityUtils.toString(response.getEntity(), "UTF-8"));
+         log.fine(" < " + response.toString());
+         log.fine(" < " + responseString);
+
          metricMap.get(MetricAuth.OpenLoginPage).add(openLoginPage);
          metricMap.get(MetricAuth.GetCode).add(getCode);
          metricMap.get(MetricAuth.Login).add(login);
