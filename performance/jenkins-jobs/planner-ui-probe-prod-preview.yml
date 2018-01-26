@@ -52,7 +52,7 @@
             branches:
                 - '*/master'
     triggers:
-        - timed: H/15 * * * *
+        - timed: H * * * *
     wrappers:
         - workspace-cleanup:
             dirmatch: false
