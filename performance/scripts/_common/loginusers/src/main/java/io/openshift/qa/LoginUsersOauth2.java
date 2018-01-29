@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  * @author Pavel Macík <mailto:pavel.macik@gmail.com>
  */
 public class LoginUsersOauth2 {
-   private static final Logger log = Logger.getLogger("login-users-oauth2-log");
+   private static final Logger log = Logger.getLogger("login-users-log");
 
    static {
       System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS.%1$tL %4$-7s [%3$s] %5$s %6$s%n");
@@ -48,6 +48,7 @@ public class LoginUsersOauth2 {
    private enum MetricAuth {
       OpenLoginPage("open-login-page"),
       GetCode("get-code"),
+      GetToken("get-token"),
       Login("login");
 
       private final String logName;
@@ -158,7 +159,7 @@ public class LoginUsersOauth2 {
          _start();
          HttpResponse response = http.execute(post);
          String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-         final long login = _stop();
+         final long getToken = _stop();
          final JSONObject json = new JSONObject(responseString);
          synchronized (tokens) {
             tokens.append(json.getString("access_token"))
@@ -166,12 +167,15 @@ public class LoginUsersOauth2 {
                   .append(json.getString("refresh_token"))
                   .append("\n");
          }
+         log.info(uName + "-" + MetricAuth.GetToken.logName() + ":" + getToken + "ms");
+         final long login = getCode + getToken;
          log.info(uName + "-" + MetricAuth.Login.logName() + ":" + login + "ms");
          log.fine(" < " + response.toString());
          log.fine(" < " + responseString);
 
          metricMap.get(MetricAuth.OpenLoginPage).add(openLoginPage);
          metricMap.get(MetricAuth.GetCode).add(getCode);
+         metricMap.get(MetricAuth.GetToken).add(getToken);
          metricMap.get(MetricAuth.Login).add(login);
       }
       log.info("All users done.");

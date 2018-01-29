@@ -15,11 +15,21 @@ LOGIN_USERS=$COMMON/loginusers
 
 mvn -f $LOGIN_USERS/pom.xml clean compile
 cat $USERS_PROPERTIES_FILE > $LOGIN_USERS/target/classes/users.properties
-export TOKENS_FILE=`readlink -f /tmp/osioperftest.tokens`
+TOKENS_FILE_PREFIX=`readlink -f /tmp/osioperftest.tokens`
+
+echo "  OAuth2 friendly login..."
+MVN_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-mvn.log
+mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Duser.tokens.file=$TOKENS_FILE_PREFIX.oauth2 -Poauth2
+LOGIN_USERS_OAUTH2_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log
+cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_OAUTH2_LOG
+
+echo "  Auth login..."
 MVN_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-mvn.log
-mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Dauth.server.port=$AUTH_PORT -Duser.tokens.file=$TOKENS_FILE
+mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Duser.tokens.file=$TOKENS_FILE_PREFIX.auth -Pauth
 LOGIN_USERS_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-login-users.log
 cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_LOG
+
+export TOKENS_FILE=$TOKENS_FILE_PREFIX.auth
 
 if [ "$RUN_LOCALLY" != "true" ]; then
 	echo "#!/bin/bash
@@ -108,8 +118,8 @@ export REPORT_CHART_HEIGHT=600
 for c in $(find *.csv | grep '\-POST_\+\|\-GET_\+'); do echo $c; $COMMON/_csv-response-time-to-png.sh $c; $COMMON/_csv-throughput-to-png.sh $c; $COMMON/_csv-failures-to-png.sh $c; done
 function distribution_2_csv {
 	HEAD=(`cat $1 | head -n 1 | sed -e 's,",,g' | sed -e 's, ,_,g' | sed -e 's,%,,g' | tr "," " "`)
-	DATA=(`cat $1 | grep -F "$2"  | sed -e 's,",,g' | sed -e 's, ,_,g' | tr "," " "`)
-	NAME=`echo $1 | sed -e 's,-report_distribution,,g' | sed -e 's,\.csv,,g'`-`echo "$2" | sed -e 's, ,_,g;' | sed -e 's,\.csv,,g'`
+	DATA=(`cat $1 | grep -F "$2" | sed -e 's,",,g' | sed -e 's, ,_,g' | tr "," " "`)
+	NAME=`echo $1 | sed -e 's,-report_distribution,,g' | sed -e 's,\.csv,,g'`-`echo "$2" | sed -e 's,",,g' | sed -e 's, ,_,g;'`
 
 	rm -rf $NAME-rt-histo.csv;
 	for i in $(seq 2 $(( ${#HEAD[*]} - 1 )) ); do
@@ -117,11 +127,11 @@ function distribution_2_csv {
 	done;
 }
 for c in $(find *.csv | grep '\-report_distribution.csv'); do
-	distribution_2_csv $c 'GET api-user-by-id';
-	distribution_2_csv $c 'GET api-user-by-name';
-	distribution_2_csv $c 'POST auth-api-token-refresh';
-	distribution_2_csv $c 'GET auth-api-user';
-	distribution_2_csv $c 'GET auth-api-user-github-token';
+	distribution_2_csv $c '"GET api-user-by-id"';
+	distribution_2_csv $c '"GET api-user-by-name"';
+	distribution_2_csv $c '"POST auth-api-token-refresh"';
+	distribution_2_csv $c '"GET auth-api-user"';
+	distribution_2_csv $c '"GET auth-api-user-github-token"';
 done
 export REPORT_CHART_WIDTH=1000
 export REPORT_CHART_HEIGHT=600
@@ -129,18 +139,25 @@ for c in $(find *rt-histo.csv); do echo $c; $COMMON/_csv-rt-histogram-to-png.sh 
 
 cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users.log | grep 'open-login-page:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-open-login-page-time.csv
 cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users.log | grep 'login:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-login-time.csv
+
+cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'open-login-page:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-open-login-page-time.csv
+cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'get-code:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-code-time.csv
+cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'get-token:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-token-time.csv
+cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'login:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-login-time.csv
+
 $COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-open-login-page-time.csv "Open Login Page Time" "Time" "Open Login Page Time [ms]"
 $COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-login-time.csv "Login Time" "Time" "Login Time [ms]"
 
+$COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-open-login-page-time.csv "OAuth2: Open Login Page Time" "Time" "Open Login Page Time [ms]"
+$COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-code-time.csv "OAuth2: Get Code Time" "Time" "Get Code Time [ms]"
+$COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-token-time.csv "OAuth2: Get Token Time" "Time" "Get Token Time [ms]"
+$COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-login-time.csv "OAuth2: Login Time" "Time" "Login Time [ms]"
+
 echo " Prepare results for Zabbix"
 rm -rvf *-zabbix.log
-./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER '"GET","auth-api-user"' "auth-api-user"
-./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER '"GET","auth-api-user-github-token"' "auth-api-user-github-token"
-./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER '"POST","auth-api-token-refresh"' "auth-api-token-refresh"
-./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER '"GET","api-user-by-id"' "api-user-by-id"
-./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER '"GET","api-user-by-name"' "api-user-by-name"
+export ZABBIX_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-zabbix.log
+./_zabbix-process-results.sh $ZABBIX_LOG
 
-ZABBIX_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-zabbix.log
 if [[ "$ZABBIX_REPORT_ENABLED" = "true" ]]; then
 	echo "  Uploading report to zabbix...";
 	zabbix_sender -vv -i $ZABBIX_LOG -T -z $ZABBIX_SERVER -p $ZABBIX_PORT;
@@ -162,6 +179,22 @@ filterZabbixValue $ZABBIX_LOG "open-login-page-time.max" "@@OPEN_LOGIN_PAGE_TIME
 filterZabbixValue $ZABBIX_LOG "login-time.min" "@@LOGIN_TIME_MIN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "login-time.median" "@@LOGIN_TIME_MEDIAN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "login-time.max" "@@LOGIN_TIME_MAX@@" $RESULTS_FILE;
+
+filterZabbixValue $ZABBIX_LOG "oauth2.open-login-page-time.min" "@@OAUTH2_OPEN_LOGIN_PAGE_TIME_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "oauth2.open-login-page-time.median" "@@OAUTH2_OPEN_LOGIN_PAGE_TIME_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "oauth2.open-login-page-time.max" "@@OAUTH2_OPEN_LOGIN_PAGE_TIME_MAX@@" $RESULTS_FILE;
+
+filterZabbixValue $ZABBIX_LOG "oauth2.get-code-time.min" "@@OAUTH2_GET_CODE_TIME_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "oauth2.get-code-time.median" "@@OAUTH2_GET_CODE_TIME_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "oauth2.get-code-time.max" "@@OAUTH2_GET_CODE_TIME_MAX@@" $RESULTS_FILE;
+
+filterZabbixValue $ZABBIX_LOG "oauth2.get-token-time.min" "@@OAUTH2_GET_TOKEN_TIME_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "oauth2.get-token-time.median" "@@OAUTH2_GET_TOKEN_TIME_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "oauth2.get-token-time.max" "@@OAUTH2_GET_TOKEN_TIME_MAX@@" $RESULTS_FILE;
+
+filterZabbixValue $ZABBIX_LOG "oauth2.login-time.min" "@@OAUTH2_LOGIN_TIME_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "oauth2.login-time.median" "@@OAUTH2_LOGIN_TIME_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "oauth2.login-time.max" "@@OAUTH2_LOGIN_TIME_MAX@@" $RESULTS_FILE;
 
 filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_min" "@@AUTH_API_USER_MIN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "auth-api-user-rt_median" "@@AUTH_API_USER_MEDIAN@@" $RESULTS_FILE;

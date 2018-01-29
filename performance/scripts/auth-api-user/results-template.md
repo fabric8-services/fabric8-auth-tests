@@ -7,10 +7,12 @@ The summary results of each run are uploaded to the
 monitoring system to track the results' history.
 
 ### Prepare Test
-| Scenario | Minimal | Median | Maximal |
-| :--- | ---: | ---: | ---: |
-| `open-login-page-time` | @@OPEN_LOGIN_PAGE_TIME_MIN@@ ms | @@OPEN_LOGIN_PAGE_TIME_MEDIAN@@ ms | @@OPEN_LOGIN_PAGE_TIME_MAX@@ ms |
-| `login-time` | @@LOGIN_TIME_MIN@@ ms | @@LOGIN_TIME_MEDIAN@@ ms | @@LOGIN_TIME_MAX@@ ms |
+| Scenario | Minimal (Auth) | Minimal (OAuth2) | Median (Auth) | Median (OAuth2) | Maximal (Auth) |Maximal (OAuth2) |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `open-login-page-time` | @@OPEN_LOGIN_PAGE_TIME_MIN@@ ms | @@OAUTH2_OPEN_LOGIN_PAGE_TIME_MIN@@ ms | @@OPEN_LOGIN_PAGE_TIME_MEDIAN@@ ms | @@OAUTH2_OPEN_LOGIN_PAGE_TIME_MEDIAN@@ ms | @@OPEN_LOGIN_PAGE_TIME_MAX@@ ms | @@OAUTH2_OPEN_LOGIN_PAGE_TIME_MAX@@ ms |
+| `get-code-time` | - | @@OAUTH2_GET_CODE_TIME_MIN@@ ms | - | @@OAUTH2_GET_CODE_TIME_MEDIAN@@ ms | - | @@OAUTH2_GET_CODE_TIME_MAX@@ ms |
+| `get-token-time` | - | @@OAUTH2_GET_TOKEN_TIME_MIN@@ ms | - | @@OAUTH2_GET_TOKEN_TIME_MEDIAN@@ ms | - | @@OAUTH2_GET_TOKEN_TIME_MAX@@ ms |
+| `login-time` | @@LOGIN_TIME_MIN@@ ms | @@OAUTH2_LOGIN_TIME_MIN@@ ms | @@LOGIN_TIME_MEDIAN@@ ms | @@OAUTH2_LOGIN_TIME_MEDIAN@@ ms | @@LOGIN_TIME_MAX@@ ms | @@OAUTH2_LOGIN_TIME_MAX@@ ms |
 
 ### Load Test
 | Scenario | Minimal | Median | Maximal | Average | Failed |
@@ -28,11 +30,23 @@ The charts bellow show the whole duration of all the phases for each scenario - 
 The following charts show the respective times of UI of each test user as they were logged in one by one.
 So the first value in the chart is for the first user, the second value is for the second user and so on.
 
-#### `open-login-page-time`
+#### `open-login-page-time` (Auth)
 ![open-login-page-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-open-login-page-time.png)
 
-#### `login-time`
+#### `login-time` (Auth)
 ![login-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-login-time.png)
+
+#### `open-login-page-time` (OAuth2)
+![oauth-open-login-page-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-oauth2-open-login-page-time.png)
+
+#### `get-code-time` (OAuth2)
+![oauth2-get-code-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-oauth2-get-code-time.png)
+
+#### `get-token-time` (OAuth2)
+![oauth2-get-token-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-oauth2-get-token-time.png)
+
+#### `login-time` (OAuth2)
+![oauth2-login-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-oauth2-login-time.png)
 
 ### Load Test
 In these charts, the value shown in each point of time is the metric (minimal, median, maximal and average value) of the response time
@@ -49,12 +63,12 @@ That is the reason for the values of the maximals always go up.
 #### `auth-api-user` Failures
 ![auth-api-user-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-failures.png)
 #### `auth-api-token-refresh` Response Time
-![auth-api-token-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-response-time.png)
-![auth-api-token-minimal-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-minimal-response-time.png)
-![auth-api-token-median-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-median-response-time.png)
-![auth-api-token-maximal-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-maximal-response-time.png)
-![auth-api-token-average-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-average-response-time.png)
-![auth-api-token-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-rt-histo.png)
+![auth-api-token-refresh-response-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-response-time.png)
+![auth-api-token-refresh-minimal-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-minimal-response-time.png)
+![auth-api-token-refresh-median-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-median-response-time.png)
+![auth-api-token-refresh-maximal-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-maximal-response-time.png)
+![auth-api-token-refresh-average-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-average-response-time.png)
+![auth-api-token-refresh-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-rt-histo.png)
 #### `auth-api-token-refresh` Failures
 ![auth-api-token-refresh-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-failures.png)
 #### `auth-api-user-github-token` Response Time
@@ -74,7 +88,7 @@ That is the reason for the values of the maximals always go up.
 ![api-user-by-id-average-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-average-response-time.png)
 ![api-user-by-id-rt-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-rt-histo.png)
 #### `api-user-by-id` Failures
-![api-user-by-id-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-by-id-failures.png)
+![api-user-by-id-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-failures.png)
 ####  `api-user-by-name` Response Time
 ![api-user-by-name-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-response-time.png)
 ![api-user-by-name-minimal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-minimal-response-time.png)
