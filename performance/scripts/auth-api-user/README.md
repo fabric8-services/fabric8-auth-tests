@@ -13,7 +13,7 @@ The user accounts are evenly spread between 10 individual client nodes of the Os
 from whose the requests are sent via 100 simultaneous clients (=simulated users). Each simulated user waits randomly between 1 to 10 seconds
 before sending another request.
 
-The whole performance test suite is executed regularly each 30 minutes
+The whole performance test suite is executed regularly once per hour
 while a single run takes a login phase + 5 minutes of load phase (see below). The summary results of each run
 are uploaded to the [Zabbix](https://zabbix.devshift.net:9443/zabbix/screens.php?elementid=32&fullscreen=1) monitoring system
 to track the results' history. 
@@ -27,16 +27,44 @@ The performance test suite is divided into two phases of testing:
 Executed once per user to get user’s tokens, ID and name before the load test begins.
 This is necessary to obtain access tokens for the requests to the secured endpoints.
 
-#### *Open login page* (`open-login-page-time`)
+#### Auth Login
+##### *Open login page* (`open-login-page-time`)
 From `GET /api/login?redirect=http://localhost:8090/link.html` wait for the `LOG IN` button to be clickable
 which indicates that the page is loaded.
 
-#### *Login the user* (`login-time`)
+##### *Login the user* (`login-time`)
 From clicking on the `LOG IN` button wait for the redirect to the `http://localhost:8090/link.html?token_json=<JSON>`.
 
 From the redirect URL extract the `<JSON>` part and from in the `auth_token` and `refresh_token`.
 
 Run `auth-api-user` scenario once to get the user’s info and extract the `username` and `user ID`.
+
+#### OAuth2 Friendly Login
+##### *Open login page* (`oauth2-open-login-page-time`)
+From 
+```
+GET /api/authorize?response_type=code&client_id=740650a2-9c44-4db5-b067-a3d1b2cd2d01&scope=user:email&state=<STATE>&redirect_uri=https://<AUTH_SERVER_HOST>/api/status
+```
+where `state` is generated unique UUID v4 wait for the `LOG IN` button to be clickable which indicates that the page is loaded.
+
+##### *Get code* (`oauth2-get-code-time`)
+From clicking on the `LOG IN` button wait to be redirected to the `https://<AUTH_SERVER_HOST>/api/status?code=<CODE>&state=<STATE>`.
+
+Check that the returned `<STATE>` is equal to the original and extract `<CODE>` from the URI.
+
+##### *Get token* (`oauth2-get-token-time`)
+Using HTTP client send:
+```
+POST /api/token
+Content-Type: application/x-www-form-urlencoded
+	
+grant_type=authorization_code&client_id=740650a2-9c44-4db5-b067-a3d1b2cd2d01&code=<CODE>&redirect_uri=https://<AUTH_SERVER_HOST>/api/status
+```
+
+From the response JSON extract the `auth_token` and `refresh_token`.
+
+##### *Login the user* (`oauth2-login-time`)
+This is computed as a sum of `oauth2-get-code-time` and `oauth2-get-token-time` values.
 
 ### Load phase
 #### *Get user info by token* (`auth-api-user`)
