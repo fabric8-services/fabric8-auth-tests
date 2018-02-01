@@ -1,5 +1,5 @@
 - job:
-    name: 'auth-api-user'
+    name: 'auth-api-user-prod-preview'
     project-type: freestyle
     node: osioperf-server-1-centos7-x86_64
     properties:
@@ -20,7 +20,7 @@
            description: Auth server HTTP scheme.
        - string:
            name: SERVER_HOST
-           default: auth.openshift.io
+           default: auth.prod-preview.openshift.io
            description: Auth server machine address.
        - string:
            name: AUTH_PORT
@@ -82,7 +82,7 @@
            description: A port of Zabbix server used by zabbix_sender utility
        - string:
            name: ZABBIX_HOST
-           default: auth.openshift.io
+           default: auth.prod-preview
            description: A hostname in Zabbix the report is for
     scm:
         - git:
@@ -96,7 +96,7 @@
             dirmatch: false
         - credentials-binding:
             - file:
-                credential-id: devtools-automated-tests-osiotestX
+                credential-id: pmacik-osioperftestX.users.properties
                 variable: USERS_PROPERTIES_FILE
             - username-password-separated:
                 credential-id: grip-creds
@@ -104,7 +104,7 @@
                 password: GRIP_PASS
     builders:
         - shell: |-
-            cd performance/scripts/$JOB_BASE_NAME
+            cd performance/scripts/auth-api-user
             ./run.sh
     concurrent: false
     description: null
