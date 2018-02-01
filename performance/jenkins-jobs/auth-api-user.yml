@@ -89,8 +89,8 @@
             url: https://github.com/fabric8-services/fabric8-auth-tests.git
             branches:
                 - '*/master'
-    triggers:
-        - timed: H * * * *
+#    triggers:
+#        - timed: H * * * *
     wrappers:
         - workspace-cleanup:
             dirmatch: false
