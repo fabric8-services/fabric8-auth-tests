@@ -58,7 +58,7 @@
             dirmatch: false
         - credentials-binding:
             - text:
-                credential-id: osiperftest.pm.properties
+                credential-id: devtools-automated-tests-osiotestX
                 variable: USERS_PROPERTIES
     builders:
         - shell: |-

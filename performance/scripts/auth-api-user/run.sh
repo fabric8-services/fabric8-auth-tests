@@ -17,19 +17,19 @@ mvn -f $LOGIN_USERS/pom.xml clean compile
 cat $USERS_PROPERTIES_FILE > $LOGIN_USERS/target/classes/users.properties
 TOKENS_FILE_PREFIX=`readlink -f /tmp/osioperftest.tokens`
 
-echo "  OAuth2 friendly login..."
-MVN_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-mvn.log
-mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Duser.tokens.file=$TOKENS_FILE_PREFIX.oauth2 -Poauth2
-LOGIN_USERS_OAUTH2_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log
-cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_OAUTH2_LOG
-
 echo "  Auth login..."
 MVN_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-mvn.log
 mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Duser.tokens.file=$TOKENS_FILE_PREFIX.auth -Pauth
 LOGIN_USERS_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-login-users.log
 cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_LOG
 
-export TOKENS_FILE=$TOKENS_FILE_PREFIX.auth
+echo "  OAuth2 friendly login..."
+MVN_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-mvn.log
+mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Duser.tokens.file=$TOKENS_FILE_PREFIX.oauth2 -Poauth2
+LOGIN_USERS_OAUTH2_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log
+cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_OAUTH2_LOG
+
+export TOKENS_FILE=$TOKENS_FILE_PREFIX.oauth2
 
 if [ "$RUN_LOCALLY" != "true" ]; then
 	echo "#!/bin/bash
