@@ -45,7 +45,7 @@ From
 ```
 GET /api/authorize?response_type=code&client_id=740650a2-9c44-4db5-b067-a3d1b2cd2d01&scope=user:email&state=<STATE>&redirect_uri=https://<AUTH_SERVER_HOST>/api/status
 ```
-where `state` is generated unique UUID v4 wait for the `LOG IN` button to be clickable which indicates that the page is loaded.
+where `state` is generated unique UUID v4 wait for the `LOG IN` button to be clickable which indicates that the page is loaded. (in `/login` it is upto us to generate `state`, thus we use uuid, but in `/authorize` state is generated and sent by client, we don't have a restriction on that. `state` sent by client could be any string, but since state is supposed to be random enough and unique, uuid would be a good choice. But it is upto client to use it or not)
 
 ##### *Get code* (`oauth2-get-code-time`)
 From clicking on the `LOG IN` button wait to be redirected to the `https://<AUTH_SERVER_HOST>/api/status?code=<CODE>&state=<STATE>`.
@@ -84,6 +84,7 @@ GET /api/users?filter[username]=<username>
 ```
 
 #### *Refresh user's auth token* (`auth-api-token-refresh`)
+using `/api/token/refresh`
 ```
 POST /api/token/refresh
 Authorization: Bearer <auth_token>
@@ -91,7 +92,14 @@ Content-Type: application/json
 
 {"refresh_token":"<refresh_token>"}
 ```
+using `/api/token` with grant_type=refresh_token
+```
+POST /api/token
+Content-Type: application/json
 
+{"grant_type":"refresh_token","client_id": "740650a2-9c44-4db5-b067-a3d1b2cd2d01", "refresh_token":"$REFRESH_TOKEN", "scope": "openid"}
+
+```
 #### *Get access tokens for linked GitHub account* (`auth-api-user-github-token`)
 ```
 GET /api/token?for=https://github.com
