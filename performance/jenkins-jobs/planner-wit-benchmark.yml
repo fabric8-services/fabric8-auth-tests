@@ -1,0 +1,31 @@
+- job:
+    name: 'planner-wit-benchmark'
+    project-type: freestyle
+    node: osioperf-server-1-centos7-x86_64
+    properties:
+       - ownership:
+           owner: pmacik
+       - build-discarder:
+           days-to-keep: 28
+    scm:
+        - git:
+            url: https://github.com/fabric8-services/fabric8-auth-tests.git
+            branches:
+                - 'performance/planner-wit-benchmark'
+    triggers:
+        - timed: H/15 * * * *
+    wrappers:
+        - workspace-cleanup:
+            dirmatch: false
+    builders:
+        - shell: |-
+            cd performance/scripts/planner-wit-benchmark
+            ./run.sh
+    concurrent: false
+    description: null
+    disabled: false
+    publishers:
+       - archive:
+           artifacts: '**/*.log,**/*.csv'
+           allow-empty: 'true'
+           fingerprint: true
