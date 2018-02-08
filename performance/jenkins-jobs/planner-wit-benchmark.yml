@@ -10,7 +10,7 @@
     parameters:
        - bool:
            name: ZABBIX_REPORT_ENABLED
-           default: false
+           default: true
            description: Checked if a report is to be sent to the Zabbix instance.
        - string:
            name: ZABBIX_SERVER
@@ -22,7 +22,7 @@
            description: A port of Zabbix server used by zabbix_sender utility.
        - string:
            name: ZABBIX_HOST
-           default: osiperf-server-1
+           default: osioperf-server-1
            description: A hostname in Zabbix the report is for.
     scm:
         - git:
