@@ -2,8 +2,8 @@
 
 source _setenv.sh
 
-IN=${1-$JOB_BASE_NAME-$BUILD_NUMBER-results.csv}
-ZABBIX_LOG=${2:-$JOB_BASE_NAME-$BUILD_NUMBER-zabbix.log}
+IN=${1-$WORKSPACE/$JOB_BASE_NAME-$BUILD_NUMBER-results.csv}
+ZABBIX_LOG=${2:-$WORKSPACE/$JOB_BASE_NAME-$BUILD_NUMBER-zabbix.log}
 
 TIMESTAMP=`date +%s`
 
