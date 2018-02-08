@@ -28,7 +28,7 @@
         - git:
             url: https://github.com/fabric8-services/fabric8-auth-tests.git
             branches:
-                - 'performance/planner-wit-benchmark'
+                - '*/master'
     triggers:
         - timed: H/15 * * * *
     wrappers:
