@@ -84,7 +84,7 @@ GET /api/users?filter[username]=<username>
 ```
 
 #### *Refresh user's auth token*
- * using `/api/token/refresh` and `Authorization` (`auth-api-token-refresh`)
+ * *using `/api/token/refresh` with `Authorization` (`auth-api-token-refresh`)
 ```
 POST /api/token/refresh
 Authorization: Bearer <auth_token>
@@ -99,7 +99,7 @@ Content-Type: application/json
 
 {"refresh_token":"<refresh_token>"}
 ```
- * using `/api/token` with grant_type=refresh_token  (`api-token-refresh-grant-type`)
+ * using `/api/token` with `grant_type=refresh_token`  (`api-token-refresh-grant-type`)
 ```
 POST /api/token
 Content-Type: application/json
