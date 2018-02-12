@@ -85,8 +85,34 @@ class TokenBehavior(TaskSet):
 			response.failure("Got wrong response: [" + content + "]")
 
 	@task
-	def refreshToken(self):
+	def authRefreshToken(self):
 		response = self.client.post("/api/token/refresh", data="{\"refresh_token\":\"" + self.taskUserRefreshToken+ "\" }", headers = {"Authorization" : "Bearer " + self.taskUserToken, "Content-Type" : "application/json"}, name="auth-api-token-refresh", catch_response = True)
+		content = response.content
+		try:
+			resp_json = response.json()
+			if not response.ok:
+				response.failure("Got wrong response: [" + content + "]")
+			else:
+				response.success()
+		except ValueError:
+			response.failure("Got wrong response: [" + content + "]")
+
+	@task
+	def refreshToken(self):
+		response = self.client.post("/api/token/refresh", data="{\"refresh_token\":\"" + self.taskUserRefreshToken+ "\" }", headers = {"Content-Type" : "application/json"}, name="api-token-refresh", catch_response = True)
+		content = response.content
+		try:
+			resp_json = response.json()
+			if not response.ok:
+				response.failure("Got wrong response: [" + content + "]")
+			else:
+				response.success()
+		except ValueError:
+			response.failure("Got wrong response: [" + content + "]")
+
+	@task
+	def refreshTokenGrantType(self):
+		response = self.client.post("/api/token", json={"grant_type":"refresh_token","client_id": "740650a2-9c44-4db5-b067-a3d1b2cd2d01", "refresh_token": self.taskUserRefreshToken, "scope": "openid"}, headers = {"Content-Type" : "application/json"}, name="api-token-refresh-grant-type", catch_response = True)
 		content = response.content
 		try:
 			resp_json = response.json()
@@ -114,4 +140,4 @@ class TokenUser(HttpLocust):
 	host = serverScheme + "://" + serverHost + ":" + authPort
 	task_set = TokenBehavior
 	min_wait = 1000
-	max_wait = 10000
+	max_wait = 1000

@@ -19,6 +19,8 @@ monitoring system to track the results' history.
 | :--- | ---: | ---: | ---: | ---: | ---: |
 |`auth-api-user`| @@AUTH_API_USER_MIN@@ ms | @@AUTH_API_USER_MEDIAN@@ ms | @@AUTH_API_USER_MAX@@ ms | @@AUTH_API_USER_AVERAGE@@ ms | @@AUTH_API_USER_FAILED@@ |
 |`auth-api-token-refresh`| @@AUTH_API_TOKEN_REFRESH_MIN@@ ms | @@AUTH_API_TOKEN_REFRESH_MEDIAN@@ ms | @@AUTH_API_TOKEN_REFRESH_MAX@@ ms | @@AUTH_API_TOKEN_REFRESH_AVERAGE@@ ms | @@AUTH_API_TOKEN_REFRESH_FAILED@@ |
+|`api-token-refresh`| @@API_TOKEN_REFRESH_MIN@@ ms | @@API_TOKEN_REFRESH_MEDIAN@@ ms | @@API_TOKEN_REFRESH_MAX@@ ms | @@API_TOKEN_REFRESH_AVERAGE@@ ms | @@API_TOKEN_REFRESH_FAILED@@ |
+|`api-token-refresh-grant-type`| @@API_TOKEN_REFRESH_GRANT_TYPE_MIN@@ ms | @@API_TOKEN_REFRESH_GRANT_TYPE_MEDIAN@@ ms | @@API_TOKEN_REFRESH_GRANT_TYPE_MAX@@ ms | @@API_TOKEN_REFRESH_GRANT_TYPE_AVERAGE@@ ms | @@API_TOKEN_REFRESH_GRANT_TYPE_FAILED@@ |
 |`auth-api-user-github-token`| @@AUTH_API_USER_GITHUB_TOKEN_MIN@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_MEDIAN@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_MAX@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_AVERAGE@@ ms | @@AUTH_API_USER_GITHUB_TOKEN_FAILED@@ |
 |`api-user-by-id`| @@API_USER_BY_ID_MIN@@ ms | @@API_USER_BY_ID_MEDIAN@@ ms | @@API_USER_BY_ID_MAX@@ ms | @@API_USER_BY_ID_AVERAGE@@ ms | @@API_USER_BY_ID_FAILED@@ |
 |`api-user-by-name`| @@API_USER_BY_NAME_MIN@@ ms | @@API_USER_BY_NAME_MEDIAN@@ ms | @@API_USER_BY_NAME_MAX@@ ms | @@API_USER_BY_NAME_AVERAGE@@ ms | @@API_USER_BY_NAME_FAILED@@ |
@@ -62,6 +64,7 @@ That is the reason for the values of the maximals always go up.
 ![auth-api-user-rt-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-rt-histo.png)
 #### `auth-api-user` Failures
 ![auth-api-user-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-failures.png)
+
 #### `auth-api-token-refresh` Response Time
 ![auth-api-token-refresh-response-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-response-time.png)
 ![auth-api-token-refresh-minimal-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-minimal-response-time.png)
@@ -71,6 +74,27 @@ That is the reason for the values of the maximals always go up.
 ![auth-api-token-refresh-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-rt-histo.png)
 #### `auth-api-token-refresh` Failures
 ![auth-api-token-refresh-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_auth-api-token-refresh-failures.png)
+
+#### `api-token-refresh` Response Time
+![api-token-refresh-response-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-response-time.png)
+![api-token-refresh-minimal-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-minimal-response-time.png)
+![api-token-refresh-median-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-median-response-time.png)
+![api-token-refresh-maximal-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-maximal-response-time.png)
+![api-token-refresh-average-refresh-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-average-response-time.png)
+![api-token-refresh-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-rt-histo.png)
+#### `api-token-refresh` Failures
+![api-token-refresh-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-failures.png)
+
+#### `api-token-refresh-grant-type` Response Time
+![api-token-refresh-grant-type-response-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-grant-type-response-time.png)
+![api-token-refresh-grant-type-minimal-refresh-grant-type-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-grant-type-minimal-response-time.png)
+![api-token-refresh-grant-type-median-refresh-grant-type-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-grant-type-median-response-time.png)
+![api-token-refresh-grant-type-maximal-refresh-grant-type-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-grant-type-maximal-response-time.png)
+![api-token-refresh-grant-type-average-refresh-grant-type-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-grant-type-average-response-time.png)
+![api-token-refresh-grant-type-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-grant-type-rt-histo.png)
+#### `api-token-refresh-grant-type` Failures
+![api-token-refresh-grant-type-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-POST_api-token-refresh-grant-type-failures.png)
+
 #### `auth-api-user-github-token` Response Time
 ![auth-api-user-github-token-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-response-time.png)
 ![auth-api-user-github-token-minimal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-minimal-response-time.png)
@@ -80,6 +104,7 @@ That is the reason for the values of the maximals always go up.
 ![auth-api-user-github-token-rt-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-rt-histo.png)
 #### `auth-api-user-github-token` Failures
 ![auth-api-user-github-token-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_auth-api-user-github-token-failures.png)
+
 #### `api-user-by-id` Response Time
 ![api-user-by-id-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-response-time.png)
 ![api-user-by-id-minimal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-minimal-response-time.png)
@@ -89,6 +114,7 @@ That is the reason for the values of the maximals always go up.
 ![api-user-by-id-rt-histo](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-rt-histo.png)
 #### `api-user-by-id` Failures
 ![api-user-by-id-failures](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-id-failures.png)
+
 ####  `api-user-by-name` Response Time
 ![api-user-by-name-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-response-time.png)
 ![api-user-by-name-minimal-reponse-time](./@@JOB_BASE_NAME@@-@@BUILD_NUMBER@@-GET_api-user-by-name-minimal-response-time.png)

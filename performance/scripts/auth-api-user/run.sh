@@ -105,10 +105,13 @@ if [ "$RUN_LOCALLY" != "true" ]; then
 else
 	$COMMON/__stop-locust-master-standalone.sh TERM
 fi
+
 echo " Extract CSV data from logs"
 $COMMON/_locust-log-to-csv.sh 'GET auth-api-user ' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
 $COMMON/_locust-log-to-csv.sh 'GET auth-api-user-github-token' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
 $COMMON/_locust-log-to-csv.sh 'POST auth-api-token-refresh' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
+$COMMON/_locust-log-to-csv.sh 'POST api-token-refresh ' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
+$COMMON/_locust-log-to-csv.sh 'POST api-token-refresh-grant-type' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
 $COMMON/_locust-log-to-csv.sh 'GET api-user-by-id' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
 $COMMON/_locust-log-to-csv.sh 'GET api-user-by-name' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
 
@@ -130,6 +133,8 @@ for c in $(find *.csv | grep '\-report_distribution.csv'); do
 	distribution_2_csv $c '"GET api-user-by-id"';
 	distribution_2_csv $c '"GET api-user-by-name"';
 	distribution_2_csv $c '"POST auth-api-token-refresh"';
+	distribution_2_csv $c '"POST api-token-refresh"';
+	distribution_2_csv $c '"POST api-token-refresh-grant-type"';
 	distribution_2_csv $c '"GET auth-api-user"';
 	distribution_2_csv $c '"GET auth-api-user-github-token"';
 done
@@ -169,7 +174,7 @@ sed -e "s,@@BUILD_NUMBER@@,$BUILD_NUMBER,g" > $RESULTS_FILE
 
 # Create HTML report
 function filterZabbixValue {
-   VALUE=`cat $1 | grep $2 | head -n 1 | cut -d " " -f 4`
+   VALUE=`cat $1 | grep " $2" | head -n 1 | cut -d " " -f 4`
    sed -i -e "s,$3,$VALUE,g" $4
 }
 filterZabbixValue $ZABBIX_LOG "open-login-page-time.min" "@@OPEN_LOGIN_PAGE_TIME_MIN@@" $RESULTS_FILE;
@@ -213,6 +218,18 @@ filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_median" "@@AUTH_API_TOK
 filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_max" "@@AUTH_API_TOKEN_REFRESH_MAX@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-rt_average" "@@AUTH_API_TOKEN_REFRESH_AVERAGE@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "auth-api-token-refresh-failed" "@@AUTH_API_TOKEN_REFRESH_FAILED@@" $RESULTS_FILE;
+
+filterZabbixValue $ZABBIX_LOG "api-token-refresh-rt_min" "@@API_TOKEN_REFRESH_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-token-refresh-rt_median" "@@API_TOKEN_REFRESH_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-token-refresh-rt_max" "@@API_TOKEN_REFRESH_MAX@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-token-refresh-rt_average" "@@API_TOKEN_REFRESH_AVERAGE@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-token-refresh-failed" "@@API_TOKEN_REFRESH_FAILED@@" $RESULTS_FILE;
+
+filterZabbixValue $ZABBIX_LOG "api-token-refresh-grant-type-rt_min" "@@API_TOKEN_REFRESH_GRANT_TYPE_MIN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-token-refresh-grant-type-rt_median" "@@API_TOKEN_REFRESH_GRANT_TYPE_MEDIAN@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-token-refresh-grant-type-rt_max" "@@API_TOKEN_REFRESH_GRANT_TYPE_MAX@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-token-refresh-grant-type-rt_average" "@@API_TOKEN_REFRESH_GRANT_TYPE_AVERAGE@@" $RESULTS_FILE;
+filterZabbixValue $ZABBIX_LOG "api-token-refresh-grant-type-failed" "@@API_TOKEN_REFRESH_GRANT_TYPE_FAILED@@" $RESULTS_FILE;
 
 filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_min" "@@API_USER_BY_ID_MIN@@" $RESULTS_FILE;
 filterZabbixValue $ZABBIX_LOG "api-user-by-id-rt_median" "@@API_USER_BY_ID_MEDIAN@@" $RESULTS_FILE;

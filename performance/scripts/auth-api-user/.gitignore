@@ -1,2 +1,5 @@
 osioperf.py
 *.env
+*report.md
+*results.md
+*report.html
