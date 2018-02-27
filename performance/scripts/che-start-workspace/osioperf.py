@@ -1,11 +1,12 @@
 import json, os, threading
-from locust import HttpLocust, TaskSet, task
+from locust import HttpLocust, TaskSet, task, events
 from datetime import datetime
+import time
 
-serverScheme = "@@SERVER_SCHEME@@"
-serverHost = "@@SERVER_HOST@@"
-authPort = "@@AUTH_PORT@@"
-cheServerUrl = "@@CHE_SERVER_URL@@"
+serverScheme = "https"
+serverHost = "auth.openshift.io"
+authPort = "443"
+cheServerUrl = "https://che.openshift.io"
 
 _users = -1
 _userTokens = []
@@ -17,6 +18,7 @@ usenv = os.getenv("USER_TOKENS")
 lines = usenv.split('\n')
 
 _users = len(lines)
+
 
 for u in lines:
 	up = u.split(';')
@@ -30,8 +32,10 @@ class TokenBehavior(TaskSet):
 	taskUserName = ""
 	taskUserToken = ""
 	taskUserRefreshToken = ""
+	id = ""
 
 	def on_start(self):
+		events.quitting += self.on_stop
 		global _currentUser, _users, _userLock, _userTokens, _userRefreshTokens
 		_userLock.acquire()
 		self.taskUser = _currentUser
@@ -43,11 +47,19 @@ class TokenBehavior(TaskSet):
 		self.taskUserToken = _userTokens[self.taskUser]
 		self.taskUserRefreshToken = _userRefreshTokens[self.taskUser]
 
+	def on_stop(self):
+		print "Running on_stop method - trying to stop and delete workspace with id " + self.id
+		self.stopWorkspace(self.id)
+		self.waitForWorkspaceToStop(self.id)
+		self.deleteWorkspace(self.id)
+
 	@task
 	def createStartDeleteWorkspace(self):
 		id = self.createWorkspace()
+		self.id = id
 		print "TEST id="+id
 		self.wait()
+		self._reset_timer()
 		self.startWorkspace(id)
 		self.wait()
 		self.waitForWorkspaceToStart(id)
@@ -57,14 +69,9 @@ class TokenBehavior(TaskSet):
 
 	def createWorkspace(self):
 		print "Creating workspace"
-		json_data=open("/home/rhopp/git/fabric8-auth-tests/performance/scripts/che-start-workspace/body.json").read()
-		print "Token:"
-		print self.taskUserToken
+		json_data=open("./body.json").read()
 		response = self.client.post("/api/workspace", headers = {"Authorization" : "Bearer " + self.taskUserToken, "Content-Type":"application/json"}, name = "createWorkspace", data = json_data, catch_response = True)
-		print "============"
-		print response.content
-		print response.json()
-		print "============"
+
 		try:
 			resp_json = response.json()
 			print resp_json
@@ -93,6 +100,14 @@ class TokenBehavior(TaskSet):
 			print "Workspace id "+id+" is still not in state RUNNING"
 			self.wait()
 		print "Workspace id "+id+" is RUNNING"
+		events.request_success.fire(request_type="REPEATED_GET", name="timeForStartingWorkspace", response_time=self._tick_timer(), response_length=0)
+
+
+	def waitForWorkspaceToStop(self, id):
+		while self.getWorkspaceStatus(id) != "STOPPED":
+			print "Workspace id "+id+" is still not in state STOPPED"
+			self.wait()
+		print "Workspace id "+id+" is STOPPED"
 
 	def stopWorkspace(self, id):
 		print "Stopping workspace id "+id
@@ -130,7 +145,17 @@ class TokenBehavior(TaskSet):
 				return resp_json["status"]
 		except ValueError:
 			response.failure("Got wrong response: [" + content + "]")
-			
+
+	def _reset_timer(self):
+		self.start = time.time()
+
+	def _tick_timer(self):
+		self.stop = time.time()
+		ret_val = (self.stop - self.start) * 1000
+		self.start = self.stop
+		return ret_val
+
+
 
 class TokenUser(HttpLocust):
 	host = cheServerUrl

@@ -7,7 +7,7 @@ export RUN_LOCALLY=true
 export JOB_BASE_NAME=LOGS
 
 # Should be provided by Jenkins.
-export BUILD_NUMBER=0
+#export BUILD_NUMBER=0
 
 # Auth server HTTP scheme http/https
 export SERVER_SCHEME=https
@@ -51,16 +51,16 @@ export USERS_PROPERTIES_FILE=osioperftest.users.properties
 export ENV_FILE=/tmp/osioperftest.users.env
 
 # 'true' if a report will be sent to a Zabbix instance
-#export ZABBIX_REPORT_ENABLED=false
+export ZABBIX_REPORT_ENABLED=false
 
 # An address of Zabbix server
-#export ZABBIX_SERVER=zabbix.devshift.net
+export ZABBIX_SERVER=zabbix.devshift.net
 
 # A port of Zabbix server used by zabbix_sender utility
-#export ZABBIX_PORT=10051
+export ZABBIX_PORT=10051
 
 # A hostname in Zabbix the report is for
-#export ZABBIX_HOST=auth.prod-preview
+export ZABBIX_HOST=qa_che.openshift.io
 
 # A number of seconds for how long the test should run
-export DURATION=120
+export DURATION=300
