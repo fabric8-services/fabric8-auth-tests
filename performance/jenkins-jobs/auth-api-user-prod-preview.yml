@@ -96,7 +96,7 @@
             dirmatch: false
         - credentials-binding:
             - file:
-                credential-id: pmacik-osioperftestX.users.properties
+                credential-id: osio-ci-eeX-preview.users.properties
                 variable: USERS_PROPERTIES_FILE
             - username-password-separated:
                 credential-id: grip-creds

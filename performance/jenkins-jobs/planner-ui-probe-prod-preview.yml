@@ -52,14 +52,14 @@
             branches:
                 - '*/master'
     triggers:
-        - timed: H * * * *
+        - timed: H 0 * * *
     wrappers:
         - workspace-cleanup:
             dirmatch: false
         - credentials-binding:
-            - text:
-                credential-id: osiperftest.pm.properties
-                variable: USERS_PROPERTIES
+            - file:
+                credential-id: osio-ci-eeX-preview.users.properties
+                variable: USERS_PROPERTIES_FILE
     builders:
         - shell: |-
             cd performance/scripts/planner-ui-probe

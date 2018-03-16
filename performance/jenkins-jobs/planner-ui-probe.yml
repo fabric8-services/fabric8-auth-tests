@@ -51,15 +51,15 @@
             url: https://github.com/fabric8-services/fabric8-auth-tests.git
             branches:
                 - '*/master'
-    triggers:
-        - timed: H * * * *
+#    triggers:
+#        - timed: H 0 * * *
     wrappers:
         - workspace-cleanup:
             dirmatch: false
         - credentials-binding:
-            - text:
-                credential-id: devtools-automated-tests-osiotestX
-                variable: USERS_PROPERTIES
+            - file:
+                credential-id: osio-ci-eeX.users.properties
+                variable: USERS_PROPERTIES_FILE
     builders:
         - shell: |-
             cd performance/scripts/$JOB_BASE_NAME

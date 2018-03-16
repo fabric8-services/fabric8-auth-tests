@@ -8,6 +8,8 @@ if [ $? -gt 0 ]; then
 	exit 1
 fi
 
+export USERS_PROPERTIES=`cat $USERS_PROPERTIES_FILE`
+
 mvn clean compile
 MVN_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-mvn.log
 mvn -l $MVN_LOG exec:java -Dserver.host=$SERVER_SCHEME://$SERVER_HOST -Dserver.port=$SERVER_PORT -Diterations=$ITERATIONS -Dplanner.space=$PLANNER_SPACE
