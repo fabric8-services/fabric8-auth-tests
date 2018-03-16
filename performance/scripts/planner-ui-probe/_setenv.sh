@@ -30,9 +30,8 @@
 # A hostname in Zabbix the report is for.
 #export ZABBIX_HOST=planner-ui.prod
 
-# A line separated list of users in a form of user=password.
-#export USERS_PROPERTIES="user1=password1
-#user2=pass2"
+# A path to a file with line separated list of users in a form of user=password.
+#export USERS_PROPERTIES_FILE=users.properties
 
 # A number of iterations for each user to perform.
 #export ITERATIONS=1
