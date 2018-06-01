@@ -5,7 +5,7 @@ source _setenv.sh
 export ZABBIX_LOG=$1
 export ZABBIX_TIMESTAMP=`date +%s`
 
-./__zabbix-process-login.sh >> $ZABBIX_LOG
+./__zabbix-process-login.sh $ZABBIX_LOG
 
 ./__zabbix-process-load.sh '"GET","auth-api-user"' "auth-api-user" >> $ZABBIX_LOG
 ./__zabbix-process-load.sh '"GET","auth-api-user-github-token"' "auth-api-user-github-token" >> $ZABBIX_LOG

@@ -5,6 +5,8 @@ source _setenv.sh
 export COMMON="common.git"
 git clone https://github.com/pmacik/openshiftio-performance-common $COMMON
 
+mkdir -p $LOG_DIR/csv
+
 echo " Wait for the server to become available"
 ./_wait-for-server.sh
 if [ $? -gt 0 ]; then
@@ -20,15 +22,15 @@ cat $USERS_PROPERTIES_FILE > $LOGIN_USERS/target/classes/users.properties
 TOKENS_FILE_PREFIX=`readlink -f /tmp/osioperftest.tokens`
 
 echo "  Auth login..."
-MVN_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-mvn.log
+MVN_LOG=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-mvn.log
 mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Duser.tokens.file=$TOKENS_FILE_PREFIX.auth -Pauth
-LOGIN_USERS_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-login-users.log
+LOGIN_USERS_LOG=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-login-users.log
 cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_LOG
 
 echo "  OAuth2 friendly login..."
-MVN_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-mvn.log
+MVN_LOG=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-mvn.log
 mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Duser.tokens.file=$TOKENS_FILE_PREFIX.oauth2 -Poauth2
-LOGIN_USERS_OAUTH2_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log
+LOGIN_USERS_OAUTH2_LOG=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log
 cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_OAUTH2_LOG
 
 export TOKENS_FILE=$TOKENS_FILE_PREFIX.oauth2
@@ -109,13 +111,13 @@ else
 fi
 
 echo " Extract CSV data from logs"
-$COMMON/_locust-log-to-csv.sh 'GET auth-api-user ' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
-$COMMON/_locust-log-to-csv.sh 'GET auth-api-user-github-token' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
-$COMMON/_locust-log-to-csv.sh 'POST auth-api-token-refresh' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
-$COMMON/_locust-log-to-csv.sh 'POST api-token-refresh ' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
-$COMMON/_locust-log-to-csv.sh 'POST api-token-refresh-grant-type' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
-$COMMON/_locust-log-to-csv.sh 'GET api-user-by-id' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
-$COMMON/_locust-log-to-csv.sh 'GET api-user-by-name' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
+$COMMON/_locust-log-to-csv.sh 'GET auth-api-user ' $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
+$COMMON/_locust-log-to-csv.sh 'GET auth-api-user-github-token' $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
+$COMMON/_locust-log-to-csv.sh 'POST auth-api-token-refresh' $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
+$COMMON/_locust-log-to-csv.sh 'POST api-token-refresh ' $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
+$COMMON/_locust-log-to-csv.sh 'POST api-token-refresh-grant-type' $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
+$COMMON/_locust-log-to-csv.sh 'GET api-user-by-id' $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
+$COMMON/_locust-log-to-csv.sh 'GET api-user-by-name' $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log
 
 echo " Generate charts from CSV"
 export REPORT_CHART_WIDTH=1000
@@ -131,7 +133,7 @@ function distribution_2_csv {
 		echo "${HEAD[$i]};${DATA[$i]}" >> $NAME-rt-histo.csv;
 	done;
 }
-for c in $(find *.csv | grep '\-report_distribution.csv'); do
+for c in $(find $LOG_DIR/csv -name '*-report_distribution.csv'); do
 	distribution_2_csv $c '"GET api-user-by-id"';
 	distribution_2_csv $c '"GET api-user-by-name"';
 	distribution_2_csv $c '"POST auth-api-token-refresh"';
@@ -140,29 +142,27 @@ for c in $(find *.csv | grep '\-report_distribution.csv'); do
 	distribution_2_csv $c '"GET auth-api-user"';
 	distribution_2_csv $c '"GET auth-api-user-github-token"';
 done
-export REPORT_CHART_WIDTH=1000
-export REPORT_CHART_HEIGHT=600
-for c in $(find *rt-histo.csv); do echo $c; $COMMON/_csv-rt-histogram-to-png.sh $c; done
+for c in $(find $LOG_DIR/csv -name '*rt-histo.csv'); do echo $c; $COMMON/_csv-rt-histogram-to-png.sh $c; done
 
-cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users.log | grep 'open-login-page:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-open-login-page-time.csv
-cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users.log | grep 'login:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-login-time.csv
+cat $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-login-users.log | grep 'open-login-page:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-open-login-page-time.csv
+cat $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-login-users.log | grep 'login:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-login-time.csv
 
-cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'open-login-page:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-open-login-page-time.csv
-cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'get-code:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-code-time.csv
-cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'get-token:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-token-time.csv
-cat $JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'login:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-login-time.csv
+cat $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'open-login-page:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-open-login-page-time.csv
+cat $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'get-code:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-code-time.csv
+cat $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'get-token:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-token-time.csv
+cat $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log | grep 'login:' | sed -e 's,\(.*\) INFO.*:\([0-9]\+\)ms.*,\1;\2,g' > $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-login-time.csv
 
-$COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-open-login-page-time.csv "Open Login Page Time" "Time" "Open Login Page Time [ms]"
-$COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-login-time.csv "Login Time" "Time" "Login Time [ms]"
+$COMMON/_csv-to-png.sh $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-open-login-page-time.csv "Open Login Page Time" "Time" "Open Login Page Time [ms]"
+$COMMON/_csv-to-png.sh $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-login-time.csv "Login Time" "Time" "Login Time [ms]"
 
-$COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-open-login-page-time.csv "OAuth2: Open Login Page Time" "Time" "Open Login Page Time [ms]"
-$COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-code-time.csv "OAuth2: Get Code Time" "Time" "Get Code Time [ms]"
-$COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-token-time.csv "OAuth2: Get Token Time" "Time" "Get Token Time [ms]"
-$COMMON/_csv-to-png.sh $JOB_BASE_NAME-$BUILD_NUMBER-oauth2-login-time.csv "OAuth2: Login Time" "Time" "Login Time [ms]"
+$COMMON/_csv-to-png.sh $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-open-login-page-time.csv "OAuth2: Open Login Page Time" "Time" "Open Login Page Time [ms]"
+$COMMON/_csv-to-png.sh $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-code-time.csv "OAuth2: Get Code Time" "Time" "Get Code Time [ms]"
+$COMMON/_csv-to-png.sh $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-get-token-time.csv "OAuth2: Get Token Time" "Time" "Get Token Time [ms]"
+$COMMON/_csv-to-png.sh $LOG_DIR/csv/$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-login-time.csv "OAuth2: Login Time" "Time" "Login Time [ms]"
 
 echo " Prepare results for Zabbix"
-rm -rvf *-zabbix.log
-export ZABBIX_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-zabbix.log
+rm -rvf $LOG_DIR/*-zabbix.log
+export ZABBIX_LOG=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-zabbix.log
 ./_zabbix-process-results.sh $ZABBIX_LOG
 
 if [[ "$ZABBIX_REPORT_ENABLED" = "true" ]]; then
@@ -170,7 +170,7 @@ if [[ "$ZABBIX_REPORT_ENABLED" = "true" ]]; then
 	zabbix_sender -vv -i $ZABBIX_LOG -T -z $ZABBIX_SERVER -p $ZABBIX_PORT;
 fi
 
-RESULTS_FILE=$JOB_BASE_NAME-$BUILD_NUMBER-results.md
+RESULTS_FILE=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-results.md
 sed -e "s,@@JOB_BASE_NAME@@,$JOB_BASE_NAME,g" results-template.md |
 sed -e "s,@@BUILD_NUMBER@@,$BUILD_NUMBER,g" > $RESULTS_FILE
 
@@ -248,7 +248,7 @@ filterZabbixValue $ZABBIX_LOG "api-user-by-name-failed" "@@API_USER_BY_NAME_FAIL
 REPORT_TIMESTAMP=`date '+%Y-%m-%d %H:%M:%S (%Z)'`
 sed -i -e "s,@@TIMESTAMP@@,$REPORT_TIMESTAMP,g" $RESULTS_FILE
 
-REPORT_FILE=$JOB_BASE_NAME-report.md
+REPORT_FILE=$LOG_DIR/$JOB_BASE_NAME-report.md
 cat README.md $RESULTS_FILE > $REPORT_FILE
 if [ -z "$GRIP_USER" ]; then
 	grip --export $REPORT_FILE
@@ -262,4 +262,4 @@ if [ "$RUN_LOCALLY" != "true" ]; then
 fi
 
 echo " Check for errors in Locust master log"
-if [[ "0" -ne `cat $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log | grep 'Error report' | wc -l` ]]; then echo '[:(] THERE WERE ERRORS OR FAILURES!!!'; else echo '[:)] NO ERRORS OR FAILURES DETECTED.'; fi
+if [[ "0" -ne `cat $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log | grep 'Error report' | wc -l` ]]; then echo '[:(] THERE WERE ERRORS OR FAILURES!!!'; else echo '[:)] NO ERRORS OR FAILURES DETECTED.'; fi
