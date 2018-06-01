@@ -12,6 +12,10 @@
        - build-discarder:
            days-to-keep: 28
     parameters:
+       - bool:
+           name: RUN_LOCALLY
+           default: true
+           description: '"true" if locust test is to be run locally (i.e. no master, no slaves, no remote execution).'
        - choice:
            name: SERVER_SCHEME
            choices:
@@ -32,7 +36,7 @@
            description: 'Locust SSH user'
        - string:
            name: SSH_WORKDIR
-           default: /home/centos
+           default: /var/osioperf
            description: 'Locust SSH workdir'
        - string:
            name: MASTER_HOST
