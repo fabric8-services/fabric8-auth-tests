@@ -14,22 +14,22 @@ if [ $? -gt 0 ]; then
 fi
 
 echo " Login users and get auth tokens"
-LOGIN_USERS=openshift-loginusers.git/java
+LOGIN_USERS=openshift-loginusers.git
 git clone https://github.com/pmacik/openshiftio-loginusers $LOGIN_USERS
 
-mvn -f $LOGIN_USERS/pom.xml clean compile
-cat $USERS_PROPERTIES_FILE > $LOGIN_USERS/target/classes/users.properties
+mvn -f $LOGIN_USERS/java/pom.xml clean compile
+cat $USERS_PROPERTIES_FILE > $LOGIN_USERS/java/target/classes/users.properties
 TOKENS_FILE_PREFIX=`readlink -f /tmp/osioperftest.tokens`
 
 echo "  Auth login..."
 MVN_LOG=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-mvn.log
-mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Duser.tokens.file=$TOKENS_FILE_PREFIX.auth -Pauth
+mvn -f $LOGIN_USERS/java/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Duser.tokens.file=$TOKENS_FILE_PREFIX.auth -Pauth
 LOGIN_USERS_LOG=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-login-users.log
 cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_LOG
 
 echo "  OAuth2 friendly login..."
 MVN_LOG=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-oauth2-mvn.log
-mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Duser.tokens.file=$TOKENS_FILE_PREFIX.oauth2 -Poauth2
+mvn -f $LOGIN_USERS/java/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Duser.tokens.file=$TOKENS_FILE_PREFIX.oauth2 -Poauth2
 LOGIN_USERS_OAUTH2_LOG=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-login-users-oauth2.log
 cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_OAUTH2_LOG
 
