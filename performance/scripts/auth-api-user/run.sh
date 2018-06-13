@@ -14,7 +14,7 @@ if [ $? -gt 0 ]; then
 fi
 
 echo " Login users and get auth tokens"
-LOGIN_USERS=openshift-loginusers.git
+LOGIN_USERS=openshift-loginusers.git/java
 git clone https://github.com/pmacik/openshiftio-loginusers $LOGIN_USERS
 
 mvn -f $LOGIN_USERS/pom.xml clean compile
