@@ -1,7 +1,7 @@
 - job:
     name: 'auth-api-user-prod-preview'
     project-type: freestyle
-    node: osioperf-server-1-centos7-x86_64
+    node: osioperf-master1
     properties:
        - ownership:
            owner: pmacik
@@ -14,7 +14,7 @@
     parameters:
        - bool:
            name: RUN_LOCALLY
-           default: true
+           default: false
            description: '"true" if locust test is to be run locally (i.e. no master, no slaves, no remote execution).'
        - choice:
            name: SERVER_SCHEME
@@ -32,15 +32,15 @@
            description: Auth server port.
        - string:
            name: SSH_USER
-           default: centos
+           default: jenkins
            description: 'Locust SSH user'
        - string:
            name: SSH_WORKDIR
-           default: /var/osioperf
+           default: /var/lib/jenkins/osioperf
            description: 'Locust SSH workdir'
        - string:
            name: MASTER_HOST
-           default: osioperf-server-2
+           default: osioperf-master2
            description: 'Locust MASTER node'
        - choice:
            name: SLAVES
@@ -58,7 +58,7 @@
            description: A number of Locust slaves to use.
        - string:
            name: SLAVE_PREFIX
-           default: osioperf-client-
+           default: osioperf-slave
            description: A prefix for a Locust slave node address.
        - string:
            name: USERS
